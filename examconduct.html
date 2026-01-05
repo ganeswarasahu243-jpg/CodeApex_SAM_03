@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AlgoPlay | Online Exams</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #1e1e2f, #0f0f17);
+      color: #ffffff;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 20px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #2a2a3d;
+    }
+
+    header h1 {
+      font-size: 26px;
+      color: #6ee7ff;
+    }
+
+    header span {
+      color: #9ca3af;
+      font-size: 14px;
+    }
+
+    .container {
+      padding: 50px 60px;
+    }
+
+    .welcome {
+      margin-bottom: 40px;
+    }
+
+    .welcome h2 {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .welcome p {
+      color: #9ca3af;
+      font-size: 15px;
+    }
+
+    .exam-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 25px;
+    }
+
+    .exam-card {
+      background: linear-gradient(180deg, #1c1c2b, #151522);
+      border: 1px solid #2a2a3d;
+      border-radius: 16px;
+      padding: 25px;
+      transition: 0.3s;
+    }
+
+    .exam-card:hover {
+      transform: translateY(-6px);
+      border-color: #6ee7ff;
+      box-shadow: 0 10px 30px rgba(110, 231, 255, 0.15);
+    }
+
+    .exam-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .exam-desc {
+      font-size: 14px;
+      color: #9ca3af;
+      margin-bottom: 18px;
+    }
+
+    .exam-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .tag {
+      background: #0f172a;
+      border: 1px solid #2a2a3d;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      color: #6ee7ff;
+    }
+
+    .start-btn {
+      background: linear-gradient(90deg, #6ee7ff, #3b82f6);
+      border: none;
+      color: #0f0f17;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    footer {
+      margin-top: 60px;
+      padding: 20px;
+      text-align: center;
+      font-size: 13px;
+      color: #6b7280;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>AlgoPlay</h1>
+  <span>Online Exams by Teachers</span>
+</header>
+
+<div class="container">
+  <div class="welcome">
+    <h2>Available Online Exams</h2>
+    <p>These exams are created and conducted by your teachers.</p>
+  </div>
+
+  <div class="exam-grid" id="examGrid">
+    <!-- Dynamic exams will load here -->
+  </div>
+</div>
+
+<footer>
+  © 2025 AlgoPlay · Teacher Conducted Online Exams
+</footer>
+
+
+<script>
+const API = "http://localhost:5000";
+const examGrid = document.getElementById("examGrid");
+
+function loadOngoingExams() {
+  fetch(API + "/exams/active")
+    .then(res => res.json())
+    .then(exams => {
+      if (exams.length === 0) {
+        examGrid.innerHTML = `
+          <p style="color:#9ca3af;font-size:16px;">
+            ⏳ No ongoing exams at the moment.<br>
+            Waiting for teacher to start the exam…
+          </p>`;
+        return;
+      }
+
+      examGrid.innerHTML = exams.map(exam => `
+        <div class="exam-card">
+          <div class="exam-title">${exam.title}</div>
+          <div class="exam-desc">
+            Subject: ${exam.subject}<br>
+            Duration: ${exam.duration} minutes
+          </div>
+          <div class="exam-meta">
+            <div class="tag" style="color:#22c55e;border-color:#22c55e;">
+              ● Ongoing
+            </div>
+            <button class="start-btn" onclick="startExam(${exam.id})">
+              Start Exam
+            </button>
+          </div>
+        </div>
+      `).join("");
+    });
+}
+
+// initial load
+loadOngoingExams();
+
+// auto-refresh every 5 seconds
+setInterval(loadOngoingExams, 5000);
+
+function startExam(examId) {
+  window.location.href = `startexam.html?exam_id=${examId}`;
+}
+</script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AlgoPlay | Online Exam</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Inter',sans-serif;
+    }
+
+    body{
+      background:radial-gradient(circle at top,#1e1e2f,#0f0f17);
+      color:white;
+      min-height:100vh;
+    }
+
+    header{
+      padding:20px 60px;
+      border-bottom:1px solid #2a2a3d;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    header h1{ color:#6ee7ff; }
+
+    .container{
+      max-width:900px;
+      margin:40px auto;
+      padding:30px;
+      background:#020617;
+      border-radius:18px;
+      border:1px solid #1e293b;
+    }
+
+    .question-card{
+      background:#0f172a;
+      border:1px solid #2a2a3d;
+      padding:20px;
+      border-radius:14px;
+      margin-bottom:20px;
+    }
+
+    .question-card h3{
+      margin-bottom:15px;
+      font-size:16px;
+    }
+
+    .option{
+      margin:8px 0;
+    }
+
+    .option input{
+      margin-right:8px;
+    }
+
+    button{
+      margin-top:25px;
+      padding:14px;
+      width:100%;
+      border:none;
+      border-radius:12px;
+      font-weight:600;
+      cursor:pointer;
+      background:linear-gradient(90deg,#6ee7ff,#3b82f6);
+      color:#020617;
+      font-size:16px;
+    }
+
+    .result{
+      margin-top:25px;
+      font-size:20px;
+      color:#22c55e;
+      text-align:center;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>AlgoPlay</h1>
+  <span>Student · Online Exam</span>
+</header>
+
+<div class="container">
+  <h2 id="examTitle">Exam</h2>
+  <div id="questions"></div>
+
+  <button onclick="submitExam()">Submit Exam</button>
+
+  <div id="result" class="result"></div>
+</div>
+
+<script>
+const API = "http://localhost:5000";
+const params = new URLSearchParams(window.location.search);
+const examId = params.get("exam_id");
+
+if(!examId){
+  alert("No exam selected");
+}
+
+// const student_id = prompt("Enter your Student ID");
+const student_id = Number(prompt("Enter your Student ID"));
+
+if (!student_id || isNaN(student_id)) {
+  alert("Invalid Student ID");
+  throw new Error("Invalid student ID");
+}
+
+let answers = {};
+
+// Load questions
+fetch(`${API}/exam/${examId}/questions`)
+  .then(res => res.json())
+  .then(data => {
+    if(data.length === 0){
+      document.getElementById("questions").innerHTML =
+        "<p>No questions available.</p>";
+      return;
+    }
+
+    document.getElementById("questions").innerHTML = data.map((q,index) => `
+      <div class="question-card">
+        <h3>Q${index+1}. ${q.question}</h3>
+
+        ${["A","B","C","D"].map(opt => `
+          <div class="option">
+            <label>
+              <input type="radio" name="q${q.id}"
+                onclick="answers[${q.id}]='${opt}'">
+              ${opt}. ${q[opt]}
+            </label>
+          </div>
+        `).join("")}
+      </div>
+    `).join("");
+  });
+
+function submitExam(){
+  if(Object.keys(answers).length === 0){
+    alert("Please answer at least one question");
+    return;
+  }
+
+  fetch(`${API}/exam/${examId}/submit`,{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({
+      student_id: student_id,
+      answers: answers
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("result").innerText =
+      "✅ Exam Submitted! Your Score: " + data.score;
+  });
+}
+</script>
+
+</body>
+</html>

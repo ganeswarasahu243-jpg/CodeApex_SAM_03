@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Algoplay — Teacher Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root{
+  --glass: rgba(255,255,255,.08);
+  --border: rgba(255,255,255,.15);
+}
+
+body{
+  margin:0;
+  background:linear-gradient(135deg,#1a103d,#0b0826);
+  font-family:Inter,sans-serif;
+  color:white;
+}
+
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:30px;
+}
+
+/* ================= STATS ================= */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+}
+
+.card{
+  background:var(--glass);
+  padding:22px;
+  border-radius:16px;
+  box-shadow:0 12px 30px rgba(0,0,0,.4);
+}
+
+.number{
+  font-size:2.4rem;
+  font-weight:900;
+  background:linear-gradient(90deg,#a78bfa,#60a5fa);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+/* ================= SECTIONS ================= */
+.section{
+  margin-top:30px;
+  background:var(--glass);
+  padding:24px;
+  border-radius:16px;
+}
+
+/* ================= CHART GRID ================= */
+.chart-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:24px;
+}
+
+.chart-card{
+  background:rgba(255,255,255,.05);
+  border-radius:14px;
+  padding:20px;
+  height:320px;
+}
+
+.chart-card canvas{
+  max-height:240px !important;
+}
+
+/* ================= TABLE ================= */
+table{
+  width:100%;
+  margin-top:18px;
+  border-collapse:collapse;
+  overflow:hidden;
+  border-radius:12px;
+}
+
+thead{
+  background:rgba(255,255,255,.12);
+}
+
+th,td{
+  padding:14px;
+  text-align:left;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+tbody tr:hover{
+  background:rgba(255,255,255,.05);
+}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width:900px){
+  .chart-grid{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>👨‍🏫 Teacher Dashboard</h1>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="card">
+    <div class="number" id="total">0</div>
+    Total Students
+  </div>
+  <div class="card">
+    <div class="number" id="active">0</div>
+    Active Today
+  </div>
+  <div class="card">
+    <div class="number" id="completed">📤</div>
+    <a href="resources.html" style="color:#93c5fd;text-decoration:none;">Upload Assignments</a>
+  </div>
+  <div class="card exam-card">
+    <div class="number">📝</div>
+    <a href="giveexam.html" class="card-link">
+      Conduct Online Exam
+    </a>
+  </div>
+</div>
+
+<!-- CHARTS -->
+<div class="section">
+  <h2>📊 Analytics</h2>
+
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h4>Student Progress</h4>
+      <canvas id="progressChart"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <h4>Subject Performance</h4>
+      <canvas id="subjectChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- STUDENTS TABLE -->
+<div class="section">
+  <h2>📋 Students</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Grade</th>
+        <th>Progress</th>
+        <th>Hours</th>
+      </tr>
+    </thead>
+    <tbody id="studentTable"></tbody>
+  </table>
+</div>
+
+</div>
+
+<script>
+const teacherEmail = sessionStorage.getItem("logged_in_email");
+const teacherSchool = sessionStorage.getItem("logged_in_school");
+
+if (!teacherEmail || !teacherSchool) {
+  alert("Session expired. Please login again.");
+  window.location.href = "teacherlogin.html";
+}
+
+fetch(`http://localhost:5000/teacher/dashboard?email=${encodeURIComponent(teacherEmail)}`)
+.then(res => res.json())
+.then(data => {
+
+  document.getElementById("total").innerText = data.stats.total_students;
+  document.getElementById("active").innerText = data.stats.active_students;
+
+  // TABLE
+  const tbody = document.getElementById("studentTable");
+  tbody.innerHTML = "";
+  data.students.forEach(s => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${s.name}</td>
+        <td>${s.classofstudy}</td>
+        <td>${s.score}</td>
+        <td>-</td>
+      </tr>
+    `;
+  });
+
+  // PROGRESS CHART
+  new Chart(progressChart, {
+    type: "doughnut",
+    data: {
+      labels: ["Excellent", "Average", "Needs Help"],
+      datasets: [{
+        data: [
+          data.progress_chart.excellent,
+          data.progress_chart.average,
+          data.progress_chart.needs_help
+        ],
+        backgroundColor: ["#34d399","#fbbf24","#f43f5e"]
+      }]
+    },
+    options:{
+      maintainAspectRatio:false,
+      plugins:{legend:{position:"bottom"}}
+    }
+  });
+
+});
+</script>
+
+</body>
+</html>
