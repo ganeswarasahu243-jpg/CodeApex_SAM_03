@@ -192,7 +192,7 @@ async function assignWork() {
         formData.append("teacher_id", teacherId);
         formData.append("teacher_name", teacherName || "Teacher");
 
-        const response = await fetch("http://localhost:5000/assign_work", {
+        const response = await fetch("https://algoplay-backend-0s65.onrender.com/assign_work", {
             method: "POST",
             body: formData
         });
@@ -230,3 +230,4 @@ function showStatus(message, type) {
 
 </body>
 </html>
+
