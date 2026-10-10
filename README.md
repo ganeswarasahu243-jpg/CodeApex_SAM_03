@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🎮 AlgoPlay (VidyaVerse) — Gamified STEM & Coding Learning Platform
 
 [![Node.js](https://img.shields.io/badge/Backend-Node.js%20v18%2B-green.svg)](https://nodejs.org/)
@@ -304,3 +305,6 @@ Alternatively, on Windows, double-click **`start.bat`**.
 - **Educational Purpose:** The platform is engineered to enhance STEM comprehension through playful learning mechanics and diagnostic feedback.
 - **Local & Demo Authentication:** The `🚀 Quick Demo Login` feature uses local sessions to simplify review and demonstration. For enterprise deployments, integrate bcrypt password hashing and HTTP-only session cookies.
 - **Data Privacy:** Local storage stores temporary client state. Production deployments should enforce school-specific multi-tenancy and data isolation.
+=======
+# CodeApex_SAM_03
+>>>>>>> 3cf2c82cced2aae44142402626c046666602c0bc
