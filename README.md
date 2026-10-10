@@ -1,137 +1,218 @@
-# 🎮 AlgoPlay — Gamified Educational Learning Platform
-### 🌟 School Innovation: Interactive Gamified Learning for School Students
+# 🎮 AlgoPlay (VidyaVerse) — Gamified STEM & Coding Learning Platform
 
-[![Platform](https://img.shields.io/badge/Platform-Web%20%7C%20HTML5%20%7C%20CSS3%20%7C%20Vanilla%20JS-blue.svg)](#)
-[![Target](https://img.shields.io/badge/Target-Grade%206%20Math%20(Ages%2011--12)-orange.svg)](#)
-[![Status](https://img.shields.io/badge/Frontend-100%25%20Standalone%20%26%20Offline%20Ready-brightgreen.svg)](#)
+[![Node.js](https://img.shields.io/badge/Backend-Node.js%20v18%2B-green.svg)](https://nodejs.org/)
+[![Express](https://img.shields.io/badge/Framework-Express%20v4-lightgrey.svg)](https://expressjs.com/)
+[![Database](https://img.shields.io/badge/Database-MongoDB%20%7C%20Mongoose-brightgreen.svg)](https://www.mongodb.com/)
+[![Frontend](https://img.shields.io/badge/Frontend-HTML5%20%7C%20CSS3%20%7C%20Vanilla%20JS-blue.svg)](#)
+[![Typography](https://img.shields.io/badge/UI-Poppins%20%7C%20Glassmorphism-9cf.svg)](#)
+[![License](https://img.shields.io/badge/License-MIT-orange.svg)](#)
 
-**AlgoPlay** is an interactive, gamified educational web application designed for school students. The platform transforms curriculum topics across grades 6–10 into engaging game-based quests with adaptive scaffolding and smart misconception detection:
-
-> **Featured Focus:** Adding fractions with unlike denominators for **Grade 6 students (ages 11–12)** situated in an authentic **Indian marketplace (Smart Bazaar / Sabzi Mandi)** real-world context.
+**AlgoPlay (VidyaVerse)** is an interactive, gamified educational platform designed for school students and educators. The platform transforms school curricula (Mathematics, Science, Technology, and Language) into bite-sized missions, visual problem-solving games, real-time misconception diagnosis, and streamlined classroom tools for teachers.
 
 ---
 
-## 🌟 Pedagogical Learning Loop: "Mission Smart Bazaar"
+## 📑 Table of Contents
+- [✨ Key Features Overview](#-key-features-overview)
+- [🎓 Student Experience](#-student-experience)
+- [👩‍🏫 Educator Hub & Classroom Tools](#-educator-hub--classroom-tools)
+- [🧠 Pedagogical Loop & Misconception Engine](#-pedagogical-loop--misconception-engine)
+- [🎮 Arcade Mini-Games Universe](#-arcade-mini-games-universe)
+- [🗄️ Backend Architecture & Database Schemas](#️-backend-architecture--database-schemas)
+- [📡 REST API Reference](#-rest-api-reference)
+- [📁 Project Directory Structure](#-project-directory-structure)
+- [🚀 Quick Start & Installation](#-quick-start--installation)
+- [🔒 Child Safety & Privacy Disclaimers](#-child-safety--privacy-disclaimers)
+
+---
+
+## ✨ Key Features Overview
+
+### 1. Unified Cyber-Glassmorphic UI
+- **Unified Poppins Typography:** Consistent Google Font `Poppins` across all pages.
+- **Deep Space & Radiant Gradients:** Translucent glassmorphism (`backdrop-filter: blur(16px)`), cyan and violet neon glows, and responsive cards.
+- **Identical Login & Signup Portals:** [`Loginpage.html`](Loginpage.html) and [`signuppage.html`](signuppage.html) feature a 950px dual-panel card with matching aesthetic tags and live alert cards.
+
+### 2. High-Performance Full-Stack Backend
+- **Node.js & Express API:** Production-grade REST backend running on port `5000`.
+- **MongoDB Persistence:** Mongoose models for students, educators, exams, questions, homework assignments, and learning metrics.
+- **Multipart Uploads:** Multer file storage handling teacher worksheets, PDFs, Word docs, and images with immediate student distribution.
+- **Zero-Downtime Offline Fallback:** Resilient in-memory fallback store ensures that pages remain functional even when MongoDB is offline.
+
+---
+
+## 🎓 Student Experience
+
+### 🏠 Starting Landing Page (`index.html`)
+- Animated twinkling starfield canvas background.
+- Live animated counters: **2,500+ Active Students**, **15,200+ Missions Solved**, **98% Concept Mastery**, and **50+ Labs**.
+- Direct launchers into Subject Tracks (Mathematics, Science, Technology, Biology, Language, and STEM Video Arena).
+- Quick dual-path action buttons for Students and Educators.
+
+### 🔐 Student Authentication (`Loginpage.html` & `signuppage.html`)
+- Clean input fields with glowing cyan outline accents (`#7dd3fc`).
+- **Live Teacher Resource Alert:** A dedicated `📬 Teacher Resource Assigned` card automatically alerts students when a teacher uploads new homework, with an instant **`👁️ Open File Now`** button.
+- **Quick Demo Login:** One-click instant login button for frictionless testing and demonstration.
+
+### 🎒 Student Dashboard (`maindashboard.html`)
+- **Class Assignments Catalog:** Displays homework assigned by teachers, complete with subject tags, teacher name, date, and **`👁️ Open File`** and **`⬇️ Download`** buttons.
+- **Quests & Track Navigation:** Direct access to daily missions, level hubs, arcade games, and AI tutor.
+
+### 🤖 AI Study Tutor (`chatbox.html`)
+- Socratic learning assistant providing guided hints without giving away final answers.
+- **Bilingual Assistance:** Supports English and regional languages (Telugu) for inclusive learning.
+
+---
+
+## 👩‍🏫 Educator Hub & Classroom Tools
+
+### 📊 Modernized Teacher Dashboard (`teacherdash.html`)
+Redesigned with a 3-tab layout:
+1. **Class Overview & Roster:** View enrolled students, individual grades, XP, and status.
+2. **Smart Bazaar & Misconceptions:** Visual breakdown of mathematical error patterns and targeted intervention priorities.
+3. **Curriculum & Question Inspector:** Full visibility into quiz questions, correct answers, and distractors.
+- **Executive KPIs:** 4 high-level stat cards tracking Total Students, Active Learners, Average Learning Gain, and Priority Remediation.
+- **Export Capabilities:** One-click CSV export (`algoplay_fraction_analytics.csv`) for school district reporting.
+
+### ✏️ Dynamic Batch Exam Builder (`giveexam.html`)
+- **Question Count Selector:** Choose **3**, **5**, **10**, or enter a **custom count** (e.g., 7 or 15 questions).
+- **Batch Card Generator:** Dynamically creates editable cards with question text, options A, B, C, D, and a 1-click radio selector for the correct answer.
+- **Single-Click Publish:** Submits the exam and its entire question bank to MongoDB simultaneously.
+
+### 📂 Assignment & Resource Studio (`resources.html`)
+- **Drag-and-Drop Dropzone:** Easily upload homework files (PDF, DOCX, JPG, PNG up to 15MB).
+- **Automated Student Linkage:** Files are stored in `/uploads` and recorded in MongoDB.
+- **Instant Student Redirect:** Teacher is automatically redirected to the student view with options to immediately verify and open the file.
+
+---
+
+## 🧠 Pedagogical Loop & Misconception Engine
 
 AlgoPlay implements a complete, closed-loop adaptive learning cycle:
 ```
-DIAGNOSE ➔ IDENTIFY MISCONCEPTION ➔ PROVIDE TARGETED SUPPORT ➔ PRACTICE ➔ VERIFY INDEPENDENT MASTERY ➔ MEASURE LEARNING ➔ SHOW TEACHER INSIGHTS
+DIAGNOSE ➔ IDENTIFY MISCONCEPTION ➔ TARGETED VISUAL HINT ➔ PRACTICE ➔ VERIFY INDEPENDENT MASTERY ➔ MEASURE LEARNING GAIN
 ```
 
 ### The 3 Progressive Missions (`fraction_mission.html`)
+1. **Diagnostic Pre-Test (Stage 0):** Baseline assessment establishing initial competency.
+2. **Mission 1 — Understand Fractions:** Interactive CSS/SVG visual fraction strips (**Market Bar Scale**) comparing $1/2$, $1/4$, $2/4$, $1/3$, and $1/6$.
+3. **Mission 2 — Unlike Denominators Addition:** 4-step guided problem solving (Find LCM $\rightarrow$ Scale numerators $\rightarrow$ Add $\rightarrow$ Simplify) with misconception alerts.
+4. **Mission 3 — Smart Bazaar Word Problems:** Authentic Indian marketplace scenarios:
+   - *Farmer Suresh's Sabzi Basket:* Combining $1/2$ kg green chillies + $3/8$ kg ginger.
+   - *Halwai Ramu's Mithai Kitchen:* Mixing $2/3$ cup rose water + $1/4$ cup saffron syrup.
+   - *Grain Merchant's Wholesale Mandi:* Calculating total sacks of sona masoori rice ($3/10 + 2/5$).
+5. **Post-Test & Learning Gain Measurement (Stage 4):**
+   $$\text{Learning Gain} = \text{Post-Test Accuracy} - \text{Pre-Test Accuracy}$$
 
-1. **Stage 0: Diagnostic Pre-Test**:
-   - 5-question baseline assessment diagnosing prerequisite understanding (identifying numerators, common multiples, like fraction addition, unlike addition, and baseline word problems).
-   - Establishes the student's initial score (e.g. 2/5 or 40%) prior to instruction.
-
-2. **Mission 1: Understand Fractions (Visual Strips & Equivalents)**:
-   - Interactive CSS/SVG visual fraction bars (Market Bar Scale) comparing $1/2$, $1/4$, $2/4$, $1/3$, and $1/6$.
-   - Teaches students *why* halves and fourths cannot be directly added without converting to equal-sized slices.
-   - Diagnoses prerequisite LCM / LCD skills.
-
-3. **Mission 2: Become a Fraction Expert (Unlike Denominators Addition)**:
-   - Systematic addition: Step 1 (Find LCM) $\rightarrow$ Step 2 (Scale numerators) $\rightarrow$ Step 3 (Add numerators) $\rightarrow$ Step 4 (Simplify).
-   - Real-time misconception detection:
-     - Selecting $2/6$ triggers the **"Adding numerators & denominators directly"** diagnostic alert with the watermelon slice visual explanation.
-   - Socratic hints and scaffolded practice: once a hint is shown, presents a fresh, unprompted practice question to verify independent mastery.
-
-4. **Mission 3: Smart Bazaar Challenge (Transfer of Learning)**:
-   - Realistic Indian marketplace word problems:
-     - *Farmer Suresh's Sabzi Basket:* Combining $1/2$ kg green chillies + $3/8$ kg ginger.
-     - *Halwai Ramu's Mithai Kitchen:* Mixing $2/3$ cup rose water + $1/4$ cup saffron syrup for gulab jamun.
-     - *Grain Merchant's Wholesale Mandi:* Calculating total sacks of sona masoori rice sold ($3/10 + 2/5$).
-   - Rewards XP and coins for demonstrated conceptual problem-solving.
-
-5. **Stage 4: Post-Test & Learning Gain Measurement**:
-   - 5 parallel questions assessing the same mathematical competencies with fresh numbers.
-   - Generates a quantified learning improvement report:
-     $$\text{Learning Gain} = \text{Post-Test Accuracy} - \text{Pre-Test Accuracy}$$
-   - Confirms whether detected misconceptions were successfully resolved.
-
----
-
-## 🧠 Misconception Detection Engine (`fractionEngine.js`)
-
-Unlike standard quizzes that only indicate right vs wrong, AlgoPlay classifies student error patterns deterministically:
+### Deterministic Misconception Rules (`fractionEngine.js`)
 
 | Detected Misconception | Trigger Rule | Diagnostic Feedback & Visual Hint |
 | :--- | :--- | :--- |
-| **Direct Numerator/Denominator Addition** | Student selects $(n_1+n_2)/(d_1+d_2)$ (e.g. $1/2 + 1/4 = 2/6$) | Explains that denominators represent *slice size*, not items. Compares watermelon slices visually. |
-| **LCM Scaling Omission** | Student adjusts denominators but forgets to scale numerators (e.g. $1/4 + 1/4 = 2/4$) | Shows equivalent fraction scaling: $\frac{1 \times 2}{2 \times 2} = \frac{2}{4}$. |
-| **Cross-Multiplication Confusion** | Student multiplies denominators together without adjusting numerators | Guides student through finding the Least Common Denominator first. |
-| **Operation Sign Confusion** | Student subtracts numerators instead of adding | Clarifies word problem intent (combining quantities vs calculating difference). |
-| **Unclassified Error** | Unclassified answer selection | Neutral, encouraging hint encouraging the student to reread the word problem. |
+| **Direct Numerator/Denominator Addition** | Student selects $(n_1+n_2)/(d_1+d_2)$ (e.g. $1/2 + 1/4 = 2/6$) | Explains that denominators represent *slice size*. Shows visual watermelon slices. |
+| **LCM Scaling Omission** | Student adjusts denominators but forgets numerators | Visualizes fraction scaling: $\frac{1 \times 2}{2 \times 2} = \frac{2}{4}$. |
+| **Cross-Multiplication Confusion** | Student multiplies denominators without adjusting numerators | Guides student through identifying the Least Common Denominator first. |
+| **Operation Sign Error** | Student subtracts numerators instead of adding | Clarifies word problem intent (combining quantities vs finding differences). |
 
 ---
 
-## 🎮 Arcade Game Universe (`gameboard.html`)
+## 🎮 Arcade Mini-Games Universe
 
-AlgoPlay features 8 rich, interactive educational mini-games:
+AlgoPlay features 8 interactive STEM mini-games accessible via [`gameboard.html`](gameboard.html):
 
-1. **Mario Math Runner (`game2.html`)**: Rapid-fire arithmetic running game with pixel art and obstacle courses.
-2. **Smart Bazaar Market Quest (`fraction_mission.html`)**: Visual fraction bars and Indian marketplace trading quest.
-3. **Continuous Chase Quiz (`newgame.html`)**: Continuous runner quiz with real-time chase dynamics.
-4. **Physics Engine Lab (`phyg1.html`)**: Interactive physics simulator for gravitation, momentum, sound waves, and buoyancy.
-5. **Chemistry Reaction Lab (`cheg1.html`)**: Chemical reaction engine and atomic structure explorer.
-6. **Anatomy Pin Explorer (`sciencegame.html`)**: Visual organ pin-drop exploration with step-by-step verification.
-7. **Interactive Video Arena (`videogame1.html`)**: Video demonstrations that pause dynamically for high-stakes problem solving.
-8. **Cosmic Science Arena (`sciencelevel.html`)**: Starfield animated science challenge testing multi-disciplinary physics and chemistry.
-
----
-
-## 📊 Teacher Learning Insights Dashboard (`teacherdash.html`)
-
-The teacher dashboard includes comprehensive educational analytics:
-- **Class Learning Gain Tracking:** Side-by-side comparison of Diagnostic Pre-Test vs Post-Test averages.
-- **Misconception Breakdown Doughnut Chart:** Real-time visibility into which misunderstandings are most prevalent across the cohort.
-- **At-Risk Student Alerts:** Automated flags for students requiring extra intervention.
-- **Question & Misconception Inspector:** Review every question, answer key, distractor rationale, and pedagogical hint.
-- **CSV Export:** One-click data export (`algoplay_fraction_analytics.csv`) for school reporting.
+1. **Smart Bazaar Market Quest (`fraction_mission.html`):** Visual fraction bars and marketplace trading simulator.
+2. **Mario Math Runner (`game2.html`):** Rapid-fire arithmetic platformer with obstacles.
+3. **Continuous Chase Quiz (`newgame.html`):** Fast-paced runner quiz with survival mechanics.
+4. **Physics Engine Lab (`phyg1.html`):** Simulator for gravitation, velocity, momentum, and sound waves.
+5. **Chemistry Reaction Lab (`cheg1.html`):** Interactive atom builder and chemical reaction equations.
+6. **Anatomy Pin Explorer (`sciencegame.html`):** Visual organ pin-drop exploration.
+7. **Interactive Video Arena (`videogame1.html`):** Video challenges that pause dynamically for checkpoint quiz questions.
+8. **Cosmic Science Arena (`sciencelevel.html`):** Space-themed multi-disciplinary science challenge.
 
 ---
 
-## 🚀 How to Run
+## 🗄️ Backend Architecture & Database Schemas
 
-### Option 1: Double-click Launcher (Windows)
-Double-click **`start.bat`** in the project folder. It launches the Node.js Express server with MongoDB and opens the platform in your browser.
+The backend runs on **Express.js** and connects to **MongoDB** via Mongoose.
 
-### Option 2: Command Line (Node.js + Express + MongoDB)
-```bash
-# Install dependencies (Express, Mongoose, Cors, Multer, Dotenv)
-npm install
+### Mongoose Schemas (`/models`)
 
-# Start the Node.js + Express + MongoDB server
-npm start
-```
-- **Platform & REST API:** **[http://localhost:5000](http://localhost:5000)**
-- **Static Preview (Port 5500):** `node serve.js` $\rightarrow$ **[http://localhost:5500](http://localhost:5500)**
+- **Student (`models/Student.js`)**
+  ```javascript
+  {
+    student_id: String,
+    name: String,
+    school_name: String,
+    age: Number,
+    grade: String,
+    password: String, // Plain or hashed
+    score: Number,
+    xp: Number,
+    rank: Number
+  }
+  ```
+
+- **Teacher (`models/Teacher.js`)**
+  ```javascript
+  {
+    name: String,
+    email: String,
+    school_name: String,
+    subject: String,
+    password: String
+  }
+  ```
+
+- **Exam (`models/Exam.js`) & Question (`models/Question.js`)**
+  ```javascript
+  // Exam: { title, subject, duration, is_active }
+  // Question: { exam_id, question_text, option_a, option_b, option_c, option_d, correct_option }
+  ```
+
+- **Assignment (`models/Assignment.js`)**
+  ```javascript
+  {
+    title: String,
+    subject: String,
+    filename: String,
+    original_name: String,
+    teacher_name: String,
+    timestamp: Date
+  }
+  ```
+
+- **ExamAttempt (`models/ExamAttempt.js`) & LearningMetric (`models/LearningMetric.js`)**
+  Tracks exam scores, timestamps, pre/post-test diagnostic scores, and detected error patterns.
 
 ---
 
-## 🗄️ Backend Architecture (Node.js + Express + MongoDB)
+## 📡 REST API Reference
 
-AlgoPlay is powered by a high-performance **Node.js & Express.js** REST API backed by **MongoDB (Mongoose)**:
-
-* **Entry Point:** `server.js`
-* **Configuration:** `.env` (`PORT=5000`, `MONGODB_URI=mongodb://127.0.0.1:27017/algoplay`)
-* **Database Models (`/models`):**
-  - `Student.js`: Authentication, XP, score, grade, and profile tracking.
-  - `Teacher.js`: Educator authentication and school affiliation.
-  - `Exam.js` & `Question.js`: Active online tests and multiple-choice question items.
-  - `ExamAttempt.js`: Student submission timestamps, individual answers, and grades.
-  - `Assignment.js`: Homework files uploaded by teachers with Multer file storage.
-  - `LearningMetric.js`: Concept-level mastery, diagnostic pre/post test gains, and detected misconceptions.
-* **Resilience:** Gracefully handles offline database scenarios with in-memory fallbacks so the application never hangs or crashes.
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/health` | Backend status & MongoDB connection state |
+| `POST` | `/Signup` | Register a new student |
+| `POST` | `/Login` | Authenticate student |
+| `POST` | `/TeacherSignup` | Register a new educator |
+| `POST` | `/TeacherLogin` | Authenticate educator |
+| `GET` | `/teacher/dashboard` | Fetch class roster, learner status & KPI stats |
+| `POST` | `/exam/create` | Create a new test |
+| `GET` | `/exam/:exam_id/questions` | Fetch questions for an exam |
+| `POST` | `/exam/:exam_id/submit` | Grade exam answers & reward XP |
+| `POST` | `/assign_work` | Upload file (`multipart/form-data`) & assign homework |
+| `GET` | `/assignments` | List all class assignments |
+| `POST` | `/levelupdate` | Update student current game level |
+| `POST` | `/scoreupdate` | Increment student score & XP |
+| `GET` | `/leaderboard` | Retrieve student rankings |
+| `GET` | `/api/analytics/fraction` | Smart Bazaar class diagnostic metrics |
 
 ---
 
-## 📁 Project Structure
+## 📁 Project Directory Structure
 
 ```text
 vision-999/
 │
-├── server.js                    # Node.js + Express REST API & MongoDB connection
-├── models/                      # Mongoose Schema Models
+├── server.js                    # Express REST API & MongoDB connection
+├── models/                      # Mongoose Schema Definitions
 │   ├── Student.js
 │   ├── Teacher.js
 │   ├── Exam.js
@@ -139,51 +220,87 @@ vision-999/
 │   ├── ExamAttempt.js
 │   ├── Assignment.js
 │   └── LearningMetric.js
-├── .env                         # Environment configuration (PORT, MONGODB_URI)
-├── uploads/                     # Uploaded teacher assignment documents
-├── package.json                 # Node dependencies (Express, Mongoose, Cors, Multer)
-├── start.bat                    # One-click Windows launcher
-├── serve.js                     # Lightweight static file preview server
-├── storageService.js            # Centralized persistence & learning analytics service
-├── fractionEngine.js            # Misconception detection, question bank, and adaptive engine
-├── fraction_mission.html        # Smart Bazaar gamified learning journey (Missions 1-3, Pre/Post tests)
+├── .env                         # Server environment configuration
+├── .env.example                 # Example configuration template
+├── package.json                 # Project dependencies & scripts
+├── start.bat                    # One-click Windows startup script
+├── uploads/                     # Uploaded documents (PDFs, images, worksheets)
+├── storageService.js            # Persistence & analytics synchronization
+├── fractionEngine.js            # Misconception diagnosis engine
 │
-├── 🎓 Student Experience
-│   ├── maindashboard.html       # Primary Student Dashboard (Subject cards, Quests, 8 Mini-games)
-│   ├── gameboard.html           # Arcade Game Hub (8 Interactive Mini-Games)
-│   ├── matlevel.html            # Mathematics Level Select Hub (Levels 1-8 + Smart Bazaar quest)
-│   ├── scilevel.html            # Science Level Select Hub (Levels 1-8)
-│   ├── techlevel.html           # Technology Level Select Hub (Levels 1-8)
-│   ├── english_level.html       # English Level Select Hub
-│   ├── chatbox.html             # AI Study Tutor with fraction Socratic tutor & Telugu support
-│   ├── leaderboard.html         # Student Rankings & Leaderboard
-│   ├── takeexam.html            # Active Exam Session & Grading Simulator
-│   ├── userprofile.html         # Student Profile Management
-│   └── settings.html            # Account and Appearance Settings
+├── 🌐 Public & Student Portals
+│   ├── index.html               # Main Landing Page (Features, Tracks, Stats)
+│   ├── Loginpage.html           # Student Login with Real-Time Assignment Alert
+│   ├── signuppage.html          # Student Registration
+│   ├── maindashboard.html       # Primary Student Dashboard & Assignment Viewer
+│   ├── fraction_mission.html    # Smart Bazaar Fractions Quest (Missions 1-3)
+│   ├── gameboard.html           # 8 Arcade Mini-Games Hub
+│   ├── chatbox.html             # AI Socratic Study Tutor (English & Telugu)
+│   ├── takeexam.html            # Active Exam Testing Interface
+│   ├── leaderboard.html         # Class Leaderboard
+│   └── userprofile.html         # Student Profile & Settings
 │
-├── 🎮 Game Modules
+├── 🎮 STEM Mini-Games
 │   ├── game2.html               # Mario Math Runner
-│   ├── newgame.html             # Continuous Chase Quiz
-│   ├── phyg1.html               # Physics Lab Simulation Engine
-│   ├── cheg1.html               # Chemistry Reaction & Atom Lab
-│   ├── sciencegame.html         # Visual Diagram Pin Explorer
-│   ├── videogame1.html          # Interactive Video Challenge Arena
+│   ├── newgame.html             # Continuous Runner Quiz
+│   ├── phyg1.html               # Interactive Physics Lab
+│   ├── cheg1.html               # Chemistry Reactions & Atom Lab
+│   ├── sciencegame.html         # Human Anatomy Pin Explorer
+│   ├── videogame1.html          # STEM Video Arena
 │   └── sciencelevel.html        # Cosmic Starfield Science Arena
 │
-├── 👩‍🏫 Teacher Experience
-│   ├── teacherdash.html         # Teacher Dashboard with Learning Insights & CSV Export
-│   ├── giveexam.html            # Exam Authoring Studio
-│   ├── resources.html           # Homework & Document Upload Manager
-│   └── teacherprofile.html      # Teacher Profile Details
-│
-└── 📖 Documentation
-    └── README.md                # Comprehensive documentation
+└── 👩‍🏫 Educator Tools
+    ├── teacherdash.html         # 3-Tab Teacher Dashboard (Roster, Misconceptions, Inspector)
+    ├── giveexam.html            # Batch Exam Builder with 3/5/10 Question Selector
+    ├── resources.html           # Assignment Studio & Document Dropzone
+    ├── teacherlogin.html        # Teacher Login Portal
+    └── teachersignup.html       # Teacher Registration Portal
 ```
+
+---
+
+## 🚀 Quick Start & Installation
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v16 or higher)
+- [MongoDB](https://www.mongodb.com/try/download/community) installed and running locally on `mongodb://127.0.0.1:27017/algoplay` (or a remote MongoDB Atlas URI)
+
+### 1. Clone Repository
+```bash
+git clone https://github.com/satyadev3s/vidya_verse.git
+cd vidya_verse
+```
+
+### 2. Configure Environment (`.env`)
+Create a `.env` file in the root directory:
+```env
+PORT=5000
+MONGODB_URI=mongodb://127.0.0.1:27017/algoplay
+UPLOAD_DIR=uploads
+NODE_ENV=development
+```
+
+### 3. Install Dependencies
+```bash
+npm install
+```
+
+### 4. Start the Application
+```bash
+npm start
+```
+
+Alternatively, on Windows, double-click **`start.bat`**.
+
+- **Open Website:** [http://localhost:5000/index.html](http://localhost:5000/index.html)
+- **Teacher Assignment Studio:** [http://localhost:5000/resources.html](http://localhost:5000/resources.html)
+- **Student Login:** [http://localhost:5000/Loginpage.html](http://localhost:5000/Loginpage.html)
+- **Teacher Dashboard:** [http://localhost:5000/teacherdash.html](http://localhost:5000/teacherdash.html)
 
 ---
 
 ## 🔒 Child Safety & Privacy Disclaimers
 
-- **Demo vs Production Authentication:** The demo buttons (`🚀 Quick Demo Login`) use simulated local sessions to facilitate frictionless review. In production, password hashing (e.g. bcrypt) and secure HTTP-only cookies are required.
-- **Local Storage Limitations:** Local data is stored in the browser's `localStorage` and `sessionStorage`. It is client-specific and does not substitute for a secured multi-tenant database.
-- **Future Research Testing:** Learning gains reported in the demo represent simulated student workflows. Formal claims of efficacy require supervised classroom testing with appropriate parental consent and school district authorization.
+- **Educational Purpose:** The platform is engineered to enhance STEM comprehension through playful learning mechanics and diagnostic feedback.
+- **Local & Demo Authentication:** The `🚀 Quick Demo Login` feature uses local sessions to simplify review and demonstration. For enterprise deployments, integrate bcrypt password hashing and HTTP-only session cookies.
+- **Data Privacy:** Local storage stores temporary client state. Production deployments should enforce school-specific multi-tenancy and data isolation.
