@@ -184,15 +184,20 @@ body{
     <p>Solve challenges, visualize algorithms, and grow your skills.</p>
 
     <!-- Teacher Uploaded Resource Card -->
-    <div id="resourceNotification" style="margin-top:16px;padding:12px 14px;border-radius:14px;background:rgba(34,211,238,0.1);border:1px solid rgba(56,189,248,0.3);display:none;">
+    <div id="resourceNotification" style="margin-top:16px;padding:12px 14px;border-radius:14px;background:rgba(34,211,238,0.12);border:1px solid rgba(56,189,248,0.4);display:none;">
         <div style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#38bdf8;">
             <span>📬</span> <span>Teacher Resource Assigned</span>
         </div>
-        <div id="resourceNotifTitle" style="font-size:12px;color:#f8fafc;margin-top:3px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+        <div id="resourceNotifTitle" style="font-size:13px;color:#f8fafc;margin-top:4px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
             Mathematics Worksheet
         </div>
         <div id="resourceNotifMeta" style="font-size:11px;color:#94a3b8;margin-top:2px;">
             By Prof. Sharma • Ready in Dashboard
+        </div>
+        <div style="margin-top:8px;">
+            <a id="resourceNotifLink" href="#" target="_blank" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:8px;background:#38bdf8;color:#04111d;font-size:11px;font-weight:700;text-decoration:none;">
+                👁️ Open File Now
+            </a>
         </div>
     </div>
 
@@ -207,22 +212,39 @@ body{
 
 <script>
 // Fetch latest resource for students on login page
-fetch("http://localhost:5000/assignments")
-  .then(res => res.json())
-  .then(data => {
-    if (data && data.length > 0) {
-      const topA = data[0];
-      const box = document.getElementById("resourceNotification");
-      const title = document.getElementById("resourceNotifTitle");
-      const meta = document.getElementById("resourceNotifMeta");
-      if (box && title && meta) {
-        title.innerText = topA.title || topA.filename || `${topA.subject} Assignment`;
-        meta.innerText = `${topA.subject} • By ${topA.teacher_name || 'Teacher'} • ${topA.date || 'Recent'}`;
-        box.style.display = "block";
+function loadLoginResource() {
+  const localLatest = JSON.parse(localStorage.getItem('algoplay_latest_assignment') || 'null');
+  
+  function applyResource(topA) {
+    const box = document.getElementById("resourceNotification");
+    const title = document.getElementById("resourceNotifTitle");
+    const meta = document.getElementById("resourceNotifMeta");
+    const link = document.getElementById("resourceNotifLink");
+    if (box && title && meta && link) {
+      title.innerText = topA.title || topA.filename || `${topA.subject} Assignment`;
+      meta.innerText = `${topA.subject} • By ${topA.teacher_name || 'Teacher'} • ${topA.date || 'Recent'}`;
+      if (topA.url && topA.url !== '#') {
+        link.href = topA.url;
+        link.style.display = "inline-flex";
+      } else {
+        link.style.display = "none";
       }
+      box.style.display = "block";
     }
-  })
-  .catch(() => {});
+  }
+
+  if (localLatest) applyResource(localLatest);
+
+  fetch("http://localhost:5000/assignments")
+    .then(res => res.json())
+    .then(data => {
+      if (data && data.length > 0) {
+        applyResource(data[0]);
+      }
+    })
+    .catch(() => {});
+}
+loadLoginResource();
 
 function completeLogin(id, name, school) {
     localStorage.setItem("student_id", id);

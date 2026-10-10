@@ -403,8 +403,8 @@ body {
       </div>
 
       <div style="display: flex; align-items: center; gap: 8px; margin: 10px 0 16px; font-size: 13px; color: #cbd5e1;">
-        <input type="checkbox" id="autoRedirectStudent" style="width: 16px; height: 16px; accent-color: #38bdf8; cursor: pointer;">
-        <label for="autoRedirectStudent" style="cursor: pointer;">Switch to Student Login page after uploading</label>
+        <input type="checkbox" id="autoRedirectStudent" checked style="width: 16px; height: 16px; accent-color: #38bdf8; cursor: pointer;">
+        <label for="autoRedirectStudent" style="cursor: pointer;">Automatically go to Student Login page after uploading</label>
       </div>
 
       <button id="assignBtn" class="btn-submit" onclick="assignWork()">
@@ -495,7 +495,7 @@ function renderAssignments(list) {
   container.innerHTML = list.map(item => `
     <div class="assignment-item">
       <div class="item-info">
-        <h4>${item.filename || item.subject + ' Assignment'}</h4>
+        <h4>${item.title || item.filename || item.subject + ' Assignment'}</h4>
         <div class="item-meta">
           <span class="tag-badge">${item.subject}</span>
           <span>•</span>
@@ -504,9 +504,14 @@ function renderAssignments(list) {
           <span>${item.date || 'Today'}</span>
         </div>
       </div>
-      <a href="${item.url || '#'}" download class="btn-download">
-        ⬇️ Download
-      </a>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <a href="${item.url || '#'}" target="_blank" class="btn-download" style="background:#0284c7; color:#fff;">
+          👁️ Open
+        </a>
+        <a href="${item.url || '#'}" download class="btn-download">
+          ⬇️ Download
+        </a>
+      </div>
     </div>
   `).join("");
 }
@@ -551,22 +556,34 @@ async function assignWork() {
     const data = await res.json();
 
     if (data.success || res.ok) {
-      const willRedirect = document.getElementById("autoRedirectStudent")?.checked;
+      // Save locally to ensure instant rendering across student pages
+      const assignmentData = {
+        title: customTitle || file.name,
+        subject,
+        teacher_name: teacherName,
+        date: new Date().toISOString().split('T')[0],
+        filename: file.name,
+        url: data.assignment ? data.assignment.url : `http://localhost:5000/uploads/${file.name}`
+      };
+      localStorage.setItem('algoplay_latest_assignment', JSON.stringify(assignmentData));
+
       showStatus(`
-        <div style="font-weight:700; margin-bottom: 4px;">Assignment published successfully to MongoDB &amp; Student Dashboards! 🎉</div>
-        <div style="font-size: 12px; margin-bottom: 8px; opacity: 0.9;">Now live for students upon login!</div>
-        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px;">
-          <a href="Loginpage.html" style="padding: 6px 14px; border-radius: 8px; background: #0284c7; color: #fff; text-decoration: none; font-size: 12px; font-weight: 600;">🎓 Go to Student Login →</a>
-          <a href="maindashboard.html" style="padding: 6px 14px; border-radius: 8px; background: #6366f1; color: #fff; text-decoration: none; font-size: 12px; font-weight: 600;">🎒 View Student Dashboard →</a>
+        <div style="font-weight:700; margin-bottom: 4px;">✅ Assignment uploaded &amp; published successfully!</div>
+        <div style="font-size: 13px; margin-bottom: 8px; color: #7dd3fc;">Redirecting to Student Login Page in 1.5 seconds...</div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <a href="Loginpage.html" style="padding: 6px 14px; border-radius: 8px; background: #0284c7; color: #fff; text-decoration: none; font-size: 12px; font-weight: 700;">Go Now →</a>
+          <a href="${assignmentData.url}" target="_blank" style="padding: 6px 14px; border-radius: 8px; background: #10b981; color: #fff; text-decoration: none; font-size: 12px; font-weight: 700;">👁️ View Uploaded File</a>
         </div>
       `, "success", true);
+
       document.getElementById("subject").value = "";
       document.getElementById("assignmentTitle").value = "";
       clearFile();
       loadAssignments();
-      if (willRedirect) {
-        setTimeout(() => { window.location.href = "Loginpage.html"; }, 1200);
-      }
+
+      setTimeout(() => {
+        window.location.href = "Loginpage.html";
+      }, 1500);
     } else {
       showStatus(data.error || "Upload failed.", "error");
     }
@@ -574,34 +591,36 @@ async function assignWork() {
   } catch (err) {
     console.warn("Backend offline, saving locally...", err);
 
-    // Local Storage fallback
-    const local = JSON.parse(localStorage.getItem("algoplay_assignments") || "[]");
-    local.unshift({
+    const localData = {
       title: customTitle || file.name,
       subject,
       teacher_name: teacherName,
       date: new Date().toISOString().split('T')[0],
       filename: file.name,
       url: "#"
-    });
-    localStorage.setItem("algoplay_assignments", JSON.stringify(local));
+    };
 
-    const willRedirect = document.getElementById("autoRedirectStudent")?.checked;
+    const local = JSON.parse(localStorage.getItem("algoplay_assignments") || "[]");
+    local.unshift(localData);
+    localStorage.setItem("algoplay_assignments", JSON.stringify(local));
+    localStorage.setItem('algoplay_latest_assignment', JSON.stringify(localData));
+
     showStatus(`
-      <div style="font-weight:700; margin-bottom: 4px;">Assignment published (Saved in offline mode)! 🎉</div>
-      <div style="font-size: 12px; margin-bottom: 8px; opacity: 0.9;">Ready for students upon login!</div>
-      <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px;">
-        <a href="Loginpage.html" style="padding: 6px 14px; border-radius: 8px; background: #0284c7; color: #fff; text-decoration: none; font-size: 12px; font-weight: 600;">🎓 Go to Student Login →</a>
-        <a href="maindashboard.html" style="padding: 6px 14px; border-radius: 8px; background: #6366f1; color: #fff; text-decoration: none; font-size: 12px; font-weight: 600;">🎒 View Student Dashboard →</a>
+      <div style="font-weight:700; margin-bottom: 4px;">✅ Assignment saved locally!</div>
+      <div style="font-size: 13px; margin-bottom: 8px; color: #7dd3fc;">Redirecting to Student Login Page in 1.5 seconds...</div>
+      <div style="display: flex; gap: 8px;">
+        <a href="Loginpage.html" style="padding: 6px 14px; border-radius: 8px; background: #0284c7; color: #fff; text-decoration: none; font-size: 12px; font-weight: 700;">Go Now →</a>
       </div>
     `, "success", true);
+
     document.getElementById("subject").value = "";
     document.getElementById("assignmentTitle").value = "";
     clearFile();
     loadAssignments();
-    if (willRedirect) {
-      setTimeout(() => { window.location.href = "Loginpage.html"; }, 1200);
-    }
+
+    setTimeout(() => {
+      window.location.href = "Loginpage.html";
+    }, 1500);
   } finally {
     btn.disabled = false;
     btn.innerText = "🚀 Publish & Assign to Students";
