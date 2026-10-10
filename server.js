@@ -500,17 +500,21 @@ app.post('/exam/:exam_id/submit', async (req, res) => {
 app.post('/assign_work', upload.single('assignment_file'), async (req, res) => {
   try {
     const subject = (req.body.subject || '').trim();
+    const title = (req.body.title || '').trim();
     const teacher_name = (req.body.teacher_name || 'Prof. Sharma').trim();
 
     if (!subject) return res.status(400).json({ error: 'Subject is required' });
     if (!req.file) return res.status(400).json({ error: 'No file provided' });
 
     const filename = req.file.filename;
+    const original_name = req.file.originalname || filename;
 
     if (isMongoConnected) {
       const assignment = new Assignment({
+        title: title || original_name,
         subject,
         filename,
+        original_name,
         teacher_name
       });
       await assignment.save();
@@ -522,8 +526,9 @@ app.post('/assign_work', upload.single('assignment_file'), async (req, res) => {
     } else {
       const newA = {
         id: String(Date.now()),
+        title: title || original_name,
         subject,
-        filename,
+        filename: original_name,
         teacher_name,
         date: new Date().toISOString().split('T')[0],
         url: `http://localhost:${PORT}/uploads/${filename}`

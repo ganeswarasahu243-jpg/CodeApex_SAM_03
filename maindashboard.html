@@ -254,14 +254,29 @@ html, body {
       }
 
       tasks.forEach(task => {
+          const title = task.title || task.filename || `${task.subject} Worksheet`;
+          const downloadUrl = task.url && task.url !== '#' ? task.url : null;
           list.innerHTML += `
-            <div class="card" style="padding: 18px 20px; border-left: 4px solid var(--accent1);">
-              <h4 style="margin:0 0 6px 0; color:#fff; font-size:15px;">${task.subject}</h4>
-              <p style="font-size: 13px; margin: 2px 0; color:var(--muted);">By ${task.teacher_name}</p>
-              <p style="font-size: 11px; color:#64748b; margin: 2px 0 10px;">${task.date || 'Today'}</p>
-              <span style="color:#38bdf8;font-size:12px;font-weight:600;cursor:pointer;">
-                📄 View Task
-              </span>
+            <div class="card" style="padding: 18px 20px; border-left: 4px solid var(--accent1); display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                  <span style="font-size:11px; font-weight:700; text-transform:uppercase; padding:3px 8px; border-radius:6px; background:rgba(139,92,246,0.2); color:#c4b5fd;">${task.subject}</span>
+                  <span style="font-size:11px; color:#64748b;">${task.date || 'Today'}</span>
+                </div>
+                <h4 style="margin:0 0 4px 0; color:#fff; font-size:15px; font-weight:600;">${title}</h4>
+                <p style="font-size: 12px; margin: 2px 0; color:var(--muted);">By ${task.teacher_name || 'Prof. Sharma'}</p>
+              </div>
+              <div>
+                ${downloadUrl ? `
+                  <a href="${downloadUrl}" download target="_blank" style="display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:8px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.35); color:#38bdf8; font-size:12px; font-weight:600; text-decoration:none; transition:0.2s;">
+                    ⬇️ Download Resource
+                  </a>
+                ` : `
+                  <span style="display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:8px; background:rgba(255,255,255,0.06); color:#94a3b8; font-size:12px;">
+                    📄 Class Assignment
+                  </span>
+                `}
+              </div>
             </div>
           `;
       });
