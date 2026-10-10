@@ -105,8 +105,22 @@
 <body>
 
 <div class="container">
-    <h2>Levels</h2>
-    <h2> want to see <a href="leaderboard.html" target="_blank"> leaderboard</a></h2>
+    <div style="margin-bottom: 20px;">
+        <a href="maindashboard.html" style="text-decoration: none; color: var(--primary); font-weight: 700; font-size: 14px;">← Back to Dashboard</a>
+    </div>
+
+    <!-- SMART BAZAAR FRACTION QUEST -->
+    <div style="background: linear-gradient(135deg, #1e1b4b, #312e81); color: white; padding: 20px; border-radius: 18px; margin-bottom: 25px; border: 1px solid rgba(141, 162, 255, 0.25);">
+        <h3 style="margin: 0 0 6px; font-size: 18px;">🏪 Smart Bazaar: Unlike Fractions Quest</h3>
+        <p style="font-size: 13px; opacity: 0.9; margin-bottom: 14px;">
+            Practice adding fractions with unlike denominators using interactive visual fraction strips &amp; marketplace challenges.
+        </p>
+        <a href="fraction_mission.html" style="display: inline-block; background: var(--primary); color: white; padding: 10px 20px; border-radius: 10px; font-weight: 700; font-size: 13px; text-decoration: none;">
+            Start Quest →
+        </a>
+    </div>
+
+    <h2>Standard Mathematics Levels</h2>
     <div id="levels"></div>
 </div>
 
@@ -121,7 +135,7 @@
     // Loop through all levels (up to totalLevels - 1) to check for completion
     let levelUnlocked = false;
     for (let i = 1; i < totalLevels; i++) {
-        const completedFlag = sessionStorage.getItem(`level${i}_completed`);
+        const completedFlag = sessionStorage.getItem(`level${i}_completed`) || (sessionStorage.getItem("completedLevel") == i ? 'true' : null);
         
         // If the current level (i) was just completed AND the permanent unlock status is only up to i
         if (completedFlag === 'true' && unlockedUntil === i) {
@@ -135,6 +149,7 @@
         
         // Always clear the session flag after checking to prevent repeated alerts on refresh
         sessionStorage.removeItem(`level${i}_completed`);
+        sessionStorage.removeItem("completedLevel");
     }
 
     const icons = ["📘", "📗", "📙", "🎯", "🚀", "✨", "⚡", "💡"];

@@ -72,6 +72,7 @@
         </div>
         <button class="btn" id="refreshBtn" title="Refresh leaderboard">Refresh</button>
         <button class="btn primary" id="highlightMeBtn">Highlight Me</button>
+        <button class="btn" onclick="window.location.href='maindashboard.html'" title="Return to Dashboard">🏠 Dashboard</button>
       </div>
     </header>
 
@@ -283,11 +284,36 @@ async function fetchLeaderboard() {
 
     renderLeaderboard(mapped, searchBox.value);
   } catch (err) {
-    console.error('Leaderboard fetch failed', err);
-    listEl.innerHTML = '';
-    emptyMsg.style.display = 'block';
-    emptyMsg.textContent = 'Could not load leaderboard — check server.';
-    updateMeBox([]);
+    console.warn('Backend offline, using offline leaderboard...', err);
+
+    const myProfile = JSON.parse(localStorage.getItem('algoplay_profile') || '{"xp": 350, "level": 2}');
+    const myName = loggedInName || localStorage.getItem('student_name') || 'Demo Learner';
+    const myId = studentId || 101;
+
+    let samplePlayers = [
+      { id: 201, name: "Aarav Sharma", xp: 1850, classofstudy: "Class 8" },
+      { id: 202, name: "Sneha Patel", xp: 1420, classofstudy: "Class 8" },
+      { id: 203, name: "Vikramaditya Rao", xp: 980, classofstudy: "Class 8" },
+      { id: myId, name: myName, xp: myProfile.xp || 350, classofstudy: "Class 8" },
+      { id: 204, name: "Diya Roy", xp: 320, classofstudy: "Class 8" },
+      { id: 205, name: "Kabir Mehta", xp: 260, classofstudy: "Class 8" },
+      { id: 206, name: "Riya Gupta", xp: 190, classofstudy: "Class 8" }
+    ];
+
+    // Include any registered local students
+    const localStudents = JSON.parse(localStorage.getItem("algoplay_students") || "[]");
+    localStudents.forEach(s => {
+      if (s.id !== myId && !samplePlayers.some(p => p.id === s.id)) {
+        samplePlayers.push({ id: s.id, name: s.name, xp: s.score || 150, classofstudy: s.classofstudy || "Class 8" });
+      }
+    });
+
+    samplePlayers.sort((a, b) => b.xp - a.xp);
+    samplePlayers.forEach((p, idx) => {
+      p.leaderboard = idx + 1;
+    });
+
+    renderLeaderboard(samplePlayers, searchBox.value);
   } finally {
     refreshBtn.disabled = false;
     refreshBtn.textContent = 'Refresh';

@@ -259,6 +259,9 @@ label{
 
 <div class="center-wrap">
   <div class="card">
+    <div style="display:flex;justify-content:flex-start;margin-bottom:10px;">
+      <a href="maindashboard.html" style="color:#60a5fa;text-decoration:none;font-weight:600;padding:6px 14px;background:rgba(255,255,255,0.08);border-radius:8px;border:1px solid rgba(255,255,255,0.15);font-size:13px;">← Dashboard</a>
+    </div>
 
     <h1>Student Profile</h1>
     <br>
@@ -396,28 +399,69 @@ remove.onclick = () => pic.src = "default_profile.png";
   draw();
 })();
 
-// Fixed save profile function with localStorage [memory:22]
+// Load saved profile data on page load
+window.addEventListener('load', () => {
+  const saved = JSON.parse(localStorage.getItem('studentProfile') || '{}');
+  const storedName = localStorage.getItem('student_name') || sessionStorage.getItem('student_name');
+
+  if (saved.name || storedName) {
+    document.getElementById("name").value = saved.name || storedName;
+  }
+  if (saved.school) {
+    document.getElementById("school").value = saved.school;
+  }
+  if (saved.classsec) {
+    document.getElementById("classsec").value = saved.classsec;
+  }
+  if (saved.age) {
+    document.getElementById("age").value = saved.age;
+  }
+  if (saved.interest) {
+    document.getElementById("interest").value = saved.interest;
+  }
+  if (saved.picture) {
+    document.getElementById("profile-picture").src = saved.picture;
+  }
+
+  document.getElementById("name").focus();
+});
+
+// Save profile function with localStorage
 function saveProfile() {
+  const nameVal = document.getElementById("name").value.trim();
+  const schoolVal = document.getElementById("school").value.trim();
+  const classVal = document.getElementById("classsec").value.trim();
+  const ageVal = document.getElementById("age").value.trim();
+  const interestVal = document.getElementById("interest").value.trim();
+  const picSrc = document.getElementById("profile-picture").src;
+
   const profile = {
-    name: document.getElementById("name").value,
-    school: document.getElementById("school").value,
-    classsec: document.getElementById("classsec").value,
-    age: document.getElementById("age").value,
-    interest: document.getElementById("interest").value,
-    picture: document.getElementById("profile-picture").src
+    name: nameVal || "Student",
+    school: schoolVal,
+    classsec: classVal,
+    age: ageVal,
+    interest: interestVal,
+    picture: picSrc
   };
-  
+
   localStorage.setItem('studentProfile', JSON.stringify(profile));
-  alert("Profile changes saved successfully!");
+  if (nameVal) {
+    localStorage.setItem('student_name', nameVal);
+    sessionStorage.setItem('student_name', nameVal);
+    sessionStorage.setItem('profileName', nameVal);
+  }
+  if (schoolVal) {
+    sessionStorage.setItem('profileSchool', schoolVal);
+  }
+  if (classVal) {
+    sessionStorage.setItem('profileClass', classVal);
+  }
+
+  alert("Profile changes saved successfully! 🎉");
   window.location.href="maindashboard.html";
 }
 
 saveBtn.onclick = saveProfile;
-
-// Focus first input on load
-window.addEventListener('load', () => {
-  document.getElementById("name").focus();
-});
 </script>
 
 </body>

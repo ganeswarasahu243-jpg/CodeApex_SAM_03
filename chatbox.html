@@ -135,20 +135,41 @@
 
       <div class="input-box">
         <!-- Using textarea for larger input area; JS reads #userInput -->
-        <textarea id="userInput" placeholder="Type a study question — e.g., 'Explain eigenvalues'"></textarea>
+        <textarea id="userInput" placeholder="Ask a study question — e.g. 'Why is 1/2 + 1/4 not 2/6?'"></textarea>
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <button id="sendBtn" class="send-btn">SEND</button>
           <div style="font-size:12px; color:var(--muted);">words range: 1 — 100</div>
         </div>
       </div>
 
-      <div style="display:flex; gap:8px; align-items:center;">
+      <!-- Grade 6 Fraction Quick Prompts -->
+      <div style="display:flex; flex-direction:column; gap:6px;">
+        <div style="font-size:11px; font-weight:800; color:var(--accent1); text-transform:uppercase;">🌟 Grade 6 Smart Bazaar Prompts:</div>
+        <button class="small-btn" onclick="quickAsk('Why is 1/2 + 1/4 not equal to 2/6?')">💡 Why isn't 1/2 + 1/4 = 2/6?</button>
+        <button class="small-btn" onclick="quickAsk('Explain how to add unlike fractions step by step')">📏 How to add unlike fractions?</button>
+        <button class="small-btn" onclick="quickAsk('Explain fraction addition in Telugu (తెలుగులో భిన్నాలు)')">🇮🇳 తెలుగులో భిన్నాల కూడిక (Telugu)</button>
+      </div>
+
+      <div style="display:flex; gap:8px; align-items:center; margin-top:6px;">
         <button id="btnClear" class="small-btn">Clear</button>
       </div>
     </div>
 
     <!-- Right chat area (75%) -->
-    
+    <div class="chat-area">
+      <div class="panel">
+        <div class="hdr">
+          <a href="maindashboard.html" style="text-decoration:none; color:var(--accent1); font-weight:800; font-size:13px; display:inline-flex; align-items:center; gap:6px;">
+            ← Dashboard
+          </a>
+          <div>
+            <h1>AlgoPlay AI Study Tutor</h1>
+            <p>Quantum Assistant for Doubts & Concepts</p>
+          </div>
+          <div class="hdr-right">
+            <button id="btnExport" class="small-btn">Export</button>
+          </div>
+        </div>
 
         <div class="content">
           <!-- Left visual (core) inside panel (keeps look) -->
@@ -166,7 +187,7 @@
             <div class="chat-window" id="chatWindow" role="log" aria-live="polite">
               <div class="q-msg assistant">
                 <div class="meta">AI Assistant</div>
-                <div class="txt">Welcome to the Algo play. Ask a study question — for example: <strong>Explain Photosynthesis</strong>.</div>
+                <div class="txt">Welcome to the AlgoPlay Quantum Tutor. Ask a study question — for example: <strong>Explain Photosynthesis</strong> or <strong>What is a Binary Search Tree?</strong></div>
                 <div class="wave" aria-hidden="true"></div>
               </div>
             </div>
@@ -390,10 +411,32 @@ async function sendMessage(){
     chatHistory.push({ role:'model', parts:[{ text: reply }] });
 
   } catch(err){
-    console.error('API error', err);
+    console.warn('API error, falling back to local study bot:', err);
     hideTyping();
-    appendAssistant(`An error occurred while connecting to the AI: ${err.message || err}`, true);
-    chatHistory = chatHistory.filter(h => !(h.role === 'user' && h.parts?.[0]?.text === text));
+    // Intelligent local fallback so the user can test the chat interface without backend/API key
+    const query = text.toLowerCase();
+    let reply = "";
+
+    // Grade 6 Fraction Study Tutor
+    if (query.includes('2/6') || ((query.includes('1/2') || query.includes('half')) && (query.includes('1/4') || query.includes('quarter'))) || (query.includes('why') && query.includes('not'))) {
+      reply = `**🧠 Smart Tutor: Why 1/2 + 1/4 is NOT 2/6!**\n\nImagine you are at **Ramu Kaka's Fruit Stall** in the bazaar:\n- If you buy **1/2 of a big watermelon**, you already have a large half!\n- If Ramu Kaka adds **1/4 of a watermelon**, your total watermelon amount must be **MORE than half**!\n\n**The Problem with 2/6:**\n- 2/6 simplifies to **1/3**.\n- 1/3 of a watermelon is **LESS** than the 1/2 you started with!\n- Adding positive quantities cannot make your total smaller!\n\n**The Correct Mathematical Way:**\n1. Convert 1/2 into fourths: **1/2 = 2/4**.\n2. Now both slices are the exact same size: **2/4 + 1/4 = 3/4**.\n\n*Rule to remember:* Denominators represent the *size* of each slice—never add denominators directly!`;
+    } else if (query.includes('telugu') || query.includes('తెలుగు') || query.includes('భిన్నాలు')) {
+      reply = `**🇮🇳 AlgoPlay గణిత ట్యూటర్ (Mathematics Tutor in Telugu):**\n\n**భిన్నాల కూడిక (Adding Fractions with Unlike Denominators):**\n\nఉదాహరణ: **1/2 + 1/4 = ?**\n\n1. **దశ 1 (కాసాగు కనుగొనడం):** హారాలు 2 మరియు 4 ల కాసాగు (LCM) = **4**.\n2. **దశ 2 (సమాన భిన్నాలుగా మార్చడం):** \n   - 1/2 ను 4 హారంగా మార్చాలి: (1 × 2) / (2 × 2) = **2/4**.\n3. **దశ 3 (లవాలను మాత్రమే కూడడం):** \n   - 2/4 + 1/4 = (2 + 1) / 4 = **3/4**.\n\n⚠️ **ముఖ్యమైన గమనిక:** హారాలను నేరుగా కూడకూడదు (1/2 + 1/4 ≠ 2/6)! హారాలు ముక్కల పరిమాణాన్ని సూచిస్తాయి.`;
+    } else if (query.includes('fraction') || query.includes('denominator') || query.includes('unlike') || query.includes('lcm') || query.includes('bazaar')) {
+      reply = `**🏪 Smart Bazaar Fraction Tutor (Grade 6):**\n\nAdding fractions with different denominators is simple when you follow the **3-Step Bazaar Method**:\n\n1. **Find the Common Size (LCM):**\n   - E.g., for 1/3 and 1/6, the LCM of 3 and 6 is **6**.\n2. **Scale into Equivalent Slices:**\n   - Multiply numerator and denominator by the same number: 1/3 becomes **2/6**.\n3. **Add Only the Numerators:**\n   - 2/6 + 1/6 = **3/6** (which simplifies to **1/2** kg)!\n\n*Try this:* What is 1/4 + 3/8? *(Hint: Convert 1/4 into eighths first!)*`;
+    } else if (query.includes('photosynthesis')) {
+      reply = "**Photosynthesis** is the biological process by which green plants and certain organisms convert light energy into chemical energy.\n\n- **Formula:** 6CO₂ + 6H₂O + Light → C₆H₁₂O₆ + 6O₂\n- **Site:** Chloroplasts (chlorophyll pigment)\n- **Stages:** Light-dependent reactions (thylakoids) and Calvin cycle (stroma).";
+    } else if (query.includes('eigenvalue') || query.includes('eigen')) {
+      reply = "**Eigenvalues & Eigenvectors:**\nIn linear algebra, for a square matrix **A** and non-zero vector **v**:\n\n$$A v = \\lambda v$$\n\n- $\\lambda$ is the **eigenvalue** (a scalar factor by which the vector is stretched or shrunk).\n- **v** is the corresponding **eigenvector**.";
+    } else if (query.includes('binary search') || query.includes('tree') || query.includes('algorithm') || query.includes('sort')) {
+      reply = "**Binary Search**:\nAn efficient algorithm for finding an item from a sorted list of items.\n\n- **Time Complexity:** O(log n)\n- **Space Complexity:** O(1) iterative\n- Works by repeatedly dividing the search space in half.";
+    } else if (query.includes('gravity') || query.includes('newton') || query.includes('force')) {
+      reply = "**Newton's Universal Law of Gravitation:**\nEvery particle attracts every other particle with a force proportional to the product of their masses and inversely proportional to the square of the distance between them:\n\n$$F = G \\frac{m_1 m_2}{r^2}$$\n\n- $G = 6.674 \\times 10^{-11} \\text{ N}\\cdot\\text{m}^2/\\text{kg}^2$";
+    } else {
+      reply = `**AlgoPlay AI Tutor [Local Study Mode]:**\n\nGreat question regarding **"${text}"**!\n\nHere are the recommended study steps:\n1. **Core Concept:** Identify definitions and underlying formulas.\n2. **Practice Problems:** Solve 2-3 standard difficulty examples.\n3. **Gamified Quiz:** Visit the **Subject Levels** to test your mastery and earn XP!\n\n*(Full live cloud AI analysis will activate once backend & network keys are configured).*`;
+    }
+    appendAssistant(reply, true);
+    chatHistory.push({ role:'model', parts:[{ text: reply }] });
   } finally {
     userInput.disabled = false; sendBtn.disabled = false; userInput.focus();
     chatWindow.scrollTop = chatWindow.scrollHeight;
@@ -403,22 +446,29 @@ async function sendMessage(){
 /* =========================
    Event bindings
    ========================= */
-sendBtn.addEventListener('click', sendMessage);
-userInput.addEventListener('keydown', (e)=> { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
+if (sendBtn) sendBtn.addEventListener('click', sendMessage);
+if (userInput) userInput.addEventListener('keydown', (e)=> { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
 
-btnClear.addEventListener('click', ()=>{
+if (btnClear) btnClear.addEventListener('click', ()=>{
   chatWindow.innerHTML = '';
-  appendAssistant('Welcome to the Quantum Grid. Ask a study question.');
+  appendAssistant('Welcome to the AlgoPlay Quantum Tutor. Ask a study question.');
   chatHistory = [];
 });
 
-btnExport.addEventListener('click', async ()=>{
+if (btnExport) btnExport.addEventListener('click', async ()=>{
   const data = JSON.stringify(chatHistory, null, 2);
   const blob = new Blob([data], {type:'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a'); a.href = url; a.download = 'quantum_chat_export.json'; a.click();
   URL.revokeObjectURL(url);
 });
+
+window.quickAsk = function(promptText) {
+  if (userInput) {
+    userInput.value = promptText;
+    sendMessage();
+  }
+};
 
 /* =========================
    Visual: animate core rings

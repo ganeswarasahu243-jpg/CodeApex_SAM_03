@@ -85,16 +85,22 @@
 
 <body>
 
-<header>
-  <h1>AlgoPlay</h1>
-  <span>Student · Online Exam</span>
+<header style="display:flex;justify-content:space-between;align-items:center;max-width:900px;margin:0 auto 20px;">
+  <div>
+    <h1>AlgoPlay</h1>
+    <span>Student · Online Exam</span>
+  </div>
+  <div>
+    <a href="examconduct.html" style="color:#60a5fa;text-decoration:none;font-weight:600;padding:8px 14px;background:rgba(255,255,255,0.08);border-radius:10px;border:1px solid rgba(255,255,255,0.15);margin-right:8px;">← Exams</a>
+    <a href="maindashboard.html" style="color:#60a5fa;text-decoration:none;font-weight:600;padding:8px 14px;background:rgba(255,255,255,0.08);border-radius:10px;border:1px solid rgba(255,255,255,0.15);">🏠 Dashboard</a>
+  </div>
 </header>
 
 <div class="container">
   <h2 id="examTitle">Exam</h2>
   <div id="questions"></div>
 
-  <button onclick="submitExam()">Submit Exam</button>
+  <button onclick="submitExam()" id="submitBtn">Submit Exam</button>
 
   <div id="result" class="result"></div>
 </div>
@@ -102,52 +108,77 @@
 <script>
 const API = "https://algoplay-backend-0s65.onrender.com";
 const params = new URLSearchParams(window.location.search);
-const examId = params.get("exam_id");
+const examId = params.get("exam_id") || "1";
 
-if(!examId){
-  alert("No exam selected");
-}
+const student_id = Number(sessionStorage.getItem('student_id') || localStorage.getItem('student_id') || 101);
 
-// const student_id = prompt("Enter your Student ID");
-const student_id = Number(prompt("Enter your Student ID"));
-
-if (!student_id || isNaN(student_id)) {
-  alert("Invalid Student ID");
-  throw new Error("Invalid student ID");
-}
-
+let examQuestionsList = [];
 let answers = {};
 
-// Load questions
-fetch(`${API}/exam/${examId}/questions`)
-  .then(res => res.json())
+function renderQuestions(data) {
+  examQuestionsList = data;
+  if(!data || data.length === 0){
+    document.getElementById("questions").innerHTML =
+      "<p>No questions available for this exam.</p>";
+    return;
+  }
+
+  document.getElementById("questions").innerHTML = data.map((q,index) => `
+    <div class="question-card">
+      <h3>Q${index+1}. ${q.question}</h3>
+
+      ${["A","B","C","D"].map(opt => `
+        <div class="option">
+          <label style="cursor:pointer;display:block;">
+            <input type="radio" name="q${q.id}"
+              onclick="answers[${q.id}]='${opt}'">
+            ${opt}. ${q[opt]}
+          </label>
+        </div>
+      `).join("")}
+    </div>
+  `).join("");
+}
+
+// Default standard questions
+const mockQuestions = [
+  { id: 1, question: "What is the result of 15 * 8 - 25?", A: "95", B: "105", C: "85", D: "115", correct: "A" },
+  { id: 2, question: "Which organelle is considered the powerhouse of the cell?", A: "Nucleus", B: "Mitochondria", C: "Ribosome", D: "Chloroplast", correct: "B" },
+  { id: 3, question: "What does HTML stand for in web development?", A: "Hyper Text Markup Language", B: "High Tech Machine Language", C: "Hyperlink Text Mode Layout", D: "Home Tool Markup Language", correct: "A" },
+  { id: 4, question: "Which law states that for every action there is an equal and opposite reaction?", A: "Newton's First Law", B: "Newton's Second Law", C: "Newton's Third Law", D: "Law of Gravitation", correct: "C" },
+  { id: 5, question: "What is the capital city of India?", A: "Mumbai", B: "New Delhi", C: "Kolkata", D: "Bengaluru", correct: "B" }
+];
+
+// Check custom teacher-created exams in localStorage
+let storedExams = [];
+try {
+  storedExams = JSON.parse(localStorage.getItem('algoplay_custom_exams') || '[]');
+} catch(e) {}
+const matchedExam = storedExams.find(e => String(e.id) === String(examId));
+const initialQuestions = (matchedExam && matchedExam.questions && matchedExam.questions.length > 0)
+  ? matchedExam.questions
+  : mockQuestions;
+
+// Render questions immediately with 0ms delay!
+renderQuestions(initialQuestions);
+
+// Optional background sync with short timeout
+const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 1000));
+Promise.race([fetch(`${API}/exam/${examId}/questions`), timeoutPromise])
+  .then(res => {
+    if(!res.ok) throw new Error("Offline");
+    return res.json();
+  })
   .then(data => {
-    if(data.length === 0){
-      document.getElementById("questions").innerHTML =
-        "<p>No questions available.</p>";
-      return;
-    }
-
-    document.getElementById("questions").innerHTML = data.map((q,index) => `
-      <div class="question-card">
-        <h3>Q${index+1}. ${q.question}</h3>
-
-        ${["A","B","C","D"].map(opt => `
-          <div class="option">
-            <label>
-              <input type="radio" name="q${q.id}"
-                onclick="answers[${q.id}]='${opt}'">
-              ${opt}. ${q[opt]}
-            </label>
-          </div>
-        `).join("")}
-      </div>
-    `).join("");
+    if (data && data.length > 0) renderQuestions(data);
+  })
+  .catch(() => {
+    // Keep instant local render
   });
 
 function submitExam(){
   if(Object.keys(answers).length === 0){
-    alert("Please answer at least one question");
+    alert("Please answer at least one question before submitting.");
     return;
   }
 
@@ -163,6 +194,34 @@ function submitExam(){
   .then(data => {
     document.getElementById("result").innerText =
       "✅ Exam Submitted! Your Score: " + data.score;
+  })
+  .catch(() => {
+    // Local offline score calculation
+    let correctCount = 0;
+    examQuestionsList.forEach(q => {
+      if (answers[q.id] && answers[q.id] === q.correct) {
+        correctCount++;
+      }
+    });
+
+    const earnedXP = correctCount * 15;
+    try {
+      const profile = JSON.parse(localStorage.getItem('algoplay_profile')) || { xp: 120, coins: 45, level: 1 };
+      profile.xp += earnedXP;
+      profile.coins += 10;
+      localStorage.setItem('algoplay_profile', JSON.stringify(profile));
+    } catch(e) {}
+
+    const resultBox = document.getElementById("result");
+    resultBox.innerHTML = `
+      <div style="padding:15px;background:rgba(34,197,94,0.15);border:1px solid #22c55e;border-radius:12px;margin-top:15px;">
+        <h3>🎉 Exam Completed!</h3>
+        <p style="font-size:18px;margin:8px 0;">Your Score: <strong>${correctCount} / ${examQuestionsList.length}</strong></p>
+        <p style="color:#a7f3d0;font-size:14px;">+${earnedXP} XP earned and saved to your profile!</p>
+        <button onclick="window.location.href='maindashboard.html'" style="margin-top:12px;padding:8px 18px;background:#22c55e;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:700;">Back to Dashboard</button>
+      </div>
+    `;
+    document.getElementById("submitBtn").style.display = "none";
   });
 }
 </script>

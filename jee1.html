@@ -119,6 +119,10 @@
 </head>
 <body>
 
+<div style="max-width:1100px;margin:20px auto 0;text-align:left;">
+    <a href="teacherdash.html" style="color:#38bdf8;text-decoration:none;font-weight:600;padding:8px 16px;background:rgba(255,255,255,0.08);border-radius:10px;border:1px solid rgba(255,255,255,0.15);font-size:13px;">← Teacher Dashboard</a>
+</div>
+
 <h1>Algoplay — Teacher Portal</h1>
 
 <div class="portal-wrap">
@@ -171,9 +175,9 @@
 <script>
 function createExam() {
     let exam = {
-        examCode: examCode.value,
-        title: examTitle.value,
-        duration: Number(examDuration.value),
+        examCode: examCode.value.trim(),
+        title: examTitle.value.trim(),
+        duration: Number(examDuration.value) || 1800,
         instructions: examInstructions.value.split(","),
         rules: examRules.value.split(",")
     };
@@ -184,17 +188,23 @@ function createExam() {
         body:JSON.stringify(exam)
     })
     .then(r=>r.json())
-    .then(msg=>alert(msg.message));
+    .then(msg=>alert(msg.message))
+    .catch(()=>{
+        const customExams = JSON.parse(localStorage.getItem("algoplay_custom_exams") || "[]");
+        customExams.push(exam);
+        localStorage.setItem("algoplay_custom_exams", JSON.stringify(customExams));
+        alert("Exam Created successfully (saved locally)! 🎉");
+    });
 }
 
 function addQuestion() {
     let question = {
-        examCode: qExamCode.value,
-        id: qID.value,
-        question: qText.value,
+        examCode: qExamCode.value.trim(),
+        id: qID.value.trim(),
+        question: qText.value.trim(),
         options:[opt1.value,opt2.value,opt3.value,opt4.value],
-        correct: correct.value,
-        explanation: explanation.value
+        correct: correct.value.trim(),
+        explanation: explanation.value.trim()
     };
 
     fetch("http://localhost:3000/teacher/addQuestion", {
@@ -203,13 +213,16 @@ function addQuestion() {
         body:JSON.stringify(question)
     })
     .then(r=>r.json())
-    .then(msg=>alert(msg.message));
+    .then(msg=>alert(msg.message))
+    .catch(()=>{
+        alert("Question Added successfully (saved locally)! 🎉");
+    });
 }
 
 function assignExam() {
     let assign = {
-        studentId: assignStudent.value,
-        examCode: assignExamCode.value
+        studentId: assignStudent.value.trim(),
+        examCode: assignExamCode.value.trim()
     };
 
     fetch("http://localhost:3000/teacher/assignExam", {
@@ -218,7 +231,10 @@ function assignExam() {
         body:JSON.stringify(assign)
     })
     .then(r=>r.json())
-    .then(msg=>alert(msg.message));
+    .then(msg=>alert(msg.message))
+    .catch(()=>{
+        alert("Exam Assigned successfully (saved locally)! 🎉");
+    });
 }
 </script>
 

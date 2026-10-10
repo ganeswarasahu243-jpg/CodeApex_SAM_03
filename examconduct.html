@@ -126,9 +126,12 @@
 
 <body>
 
-<header>
-  <h1>AlgoPlay</h1>
-  <span>Online Exams by Teachers</span>
+<header style="display:flex;justify-content:space-between;align-items:center;max-width:1100px;margin:0 auto 20px;">
+  <div>
+    <h1>AlgoPlay</h1>
+    <span>Online Exams by Teachers</span>
+  </div>
+  <a href="maindashboard.html" style="color:#60a5fa;text-decoration:none;font-weight:600;padding:8px 16px;background:rgba(255,255,255,0.08);border-radius:10px;border:1px solid rgba(255,255,255,0.15);">← Dashboard</a>
 </header>
 
 <div class="container">
@@ -151,47 +154,61 @@
 const API = "http://localhost:5000";
 const examGrid = document.getElementById("examGrid");
 
+function renderExams(exams) {
+  if (!exams || exams.length === 0) {
+    examGrid.innerHTML = `
+      <p style="color:#9ca3af;font-size:16px;">
+        ⏳ No ongoing exams at the moment.<br>
+        Waiting for teacher to start the exam…
+      </p>`;
+    return;
+  }
+
+  examGrid.innerHTML = exams.map(exam => `
+    <div class="exam-card">
+      <div class="exam-title">${exam.title}</div>
+      <div class="exam-desc">
+        Subject: ${exam.subject}<br>
+        Duration: ${exam.duration} minutes
+      </div>
+      <div class="exam-meta">
+        <div class="tag" style="color:#22c55e;border-color:#22c55e;">
+          ● Ongoing
+        </div>
+        <button class="start-btn" onclick="startExam('${exam.id}')">
+          Start Exam
+        </button>
+      </div>
+    </div>
+  `).join("");
+}
+
 function loadOngoingExams() {
   fetch(API + "/exams/active")
     .then(res => res.json())
     .then(exams => {
-      if (exams.length === 0) {
-        examGrid.innerHTML = `
-          <p style="color:#9ca3af;font-size:16px;">
-            ⏳ No ongoing exams at the moment.<br>
-            Waiting for teacher to start the exam…
-          </p>`;
-        return;
-      }
-
-      examGrid.innerHTML = exams.map(exam => `
-        <div class="exam-card">
-          <div class="exam-title">${exam.title}</div>
-          <div class="exam-desc">
-            Subject: ${exam.subject}<br>
-            Duration: ${exam.duration} minutes
-          </div>
-          <div class="exam-meta">
-            <div class="tag" style="color:#22c55e;border-color:#22c55e;">
-              ● Ongoing
-            </div>
-            <button class="start-btn" onclick="startExam(${exam.id})">
-              Start Exam
-            </button>
-          </div>
-        </div>
-      `).join("");
+      renderExams(exams);
+    })
+    .catch(() => {
+      // Offline / No Backend Fallback
+      const storedExams = JSON.parse(localStorage.getItem("algoplay_custom_exams") || "[]");
+      const defaultExams = [
+        { id: 1, title: "Mid-Term Mathematics Test", subject: "Mathematics", duration: 30 },
+        { id: 2, title: "General Science Assessment", subject: "Science", duration: 25 },
+        { id: 3, title: "Computer Logic & Coding Quiz", subject: "Technology", duration: 20 }
+      ];
+      renderExams(storedExams.length > 0 ? [...storedExams, ...defaultExams] : defaultExams);
     });
 }
 
 // initial load
 loadOngoingExams();
 
-// auto-refresh every 5 seconds
-setInterval(loadOngoingExams, 5000);
+// auto-refresh every 10 seconds
+setInterval(loadOngoingExams, 10000);
 
 function startExam(examId) {
-  window.location.href = `startexam.html?exam_id=${examId}`;
+  window.location.href = `takeexam.html?exam_id=${examId}`;
 }
 </script>
 

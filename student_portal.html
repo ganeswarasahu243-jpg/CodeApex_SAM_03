@@ -135,6 +135,11 @@ button:hover{transform:scale(1.05);background:var(--accent-hover);}
     <div class="float"></div>
 </div>
 
+<div style="max-width:650px;margin:0 auto 15px;display:flex;justify-content:space-between;align-items:center;">
+    <a href="maindashboard.html" style="color:#38bdf8;text-decoration:none;font-weight:600;padding:8px 16px;background:rgba(255,255,255,0.08);border-radius:10px;border:1px solid rgba(255,255,255,0.15);font-size:13px;">← Back to Dashboard</a>
+    <div></div>
+</div>
+
 <h1>Algoplay Student Portal</h1>
 
 <!-- SCREEN 1 -->
@@ -257,13 +262,13 @@ function loadInstructions(){
         duration:60
     };
     document.getElementById("title").innerText = data.title;
-    document.getElementById("instructionsList").innerHTML = data.instructions.map(i=><li>${i}</li>).join("");
-    document.getElementById("rulesList").innerHTML = data.rules.map(r=><li>${r}</li>).join("");
-    localStorage.setItem("duration",data.duration);
-    document.getElementById("instrSkeleton").style.display="none";
-    document.getElementById("instructionsList").style.display="block";
-    document.getElementById("rulesSkeleton").style.display="none";
-    document.getElementById("rulesList").style.display="block";
+    document.getElementById("instructionsList").innerHTML = data.instructions.map(i => `<li>${i}</li>`).join("");
+    document.getElementById("rulesList").innerHTML = data.rules.map(r => `<li>${r}</li>`).join("");
+    localStorage.setItem("duration", data.duration);
+    document.getElementById("instrSkeleton").style.display = "none";
+    document.getElementById("instructionsList").style.display = "block";
+    document.getElementById("rulesSkeleton").style.display = "none";
+    document.getElementById("rulesList").style.display = "block";
 }
 
 /* ================================
@@ -294,7 +299,7 @@ function loadQuestion(){
         document.getElementById("options").style.display="block";
         document.getElementById("qtext").innerText=q.question;
         document.getElementById("options").innerHTML =
-            q.options.map((o,i)=><div class="option-btn" id="opt${i}" onclick="answer('${q.id}','${o}',${i})">${o}</div>).join("");
+            q.options.map((o,i) => `<div class="option-btn" id="opt${i}" onclick="answer('${q.id}','${o}',${i})">${o}</div>`).join("");
         document.getElementById("qNumber").innerText=qIndex+1;
         document.getElementById("qTotal").innerText=questions.length;
         document.getElementById("progressFill").style.width = ((qIndex+1)/questions.length)*100+"%";
@@ -309,8 +314,8 @@ function answer(id,option,index){
     answers[id]=option;
     let btns=document.querySelectorAll(".option-btn");
     btns.forEach(b=>b.classList.add("disabled-option"));
-    let clicked=document.getElementById(opt${index});
-    if(option===q.correct){
+    let clicked = document.getElementById(`opt${index}`);
+    if(option === q.correct){
         clicked.classList.add("correct-anim");
         document.getElementById("correctSound").play();
     } else {
@@ -332,7 +337,7 @@ let timeLeft;
 function startTimer(){
     timeLeft = Number(localStorage.getItem("duration"));
     let timer=setInterval(()=>{
-        document.getElementById("timer").innerText=Time Left: ${timeLeft}s;
+        document.getElementById("timer").innerText = `Time Left: ${timeLeft}s`;
         document.getElementById("timerFill").style.width=(timeLeft/Number(localStorage.getItem("duration"))*100)+"%";
         if(timeLeft<=0){clearInterval(timer);submitExam();}
         timeLeft--;
@@ -372,16 +377,16 @@ function submitExam(){
 ================================ */
 function loadResult(){
     const r=JSON.parse(localStorage.getItem("result"));
-    let percent=(r.marks/r.total)*360;
-    document.getElementById("scoreFill").style.transform=rotate(${percent}deg);
-    let counter=document.getElementById("scoreCounter");
-    let i=0;
-    let anim=setInterval(()=>{
-        counter.innerText=i;
-        if(i>=r.marks) clearInterval(anim);
+    let percent = (r.marks / r.total) * 360;
+    document.getElementById("scoreFill").style.transform = `rotate(${percent}deg)`;
+    let counter = document.getElementById("scoreCounter");
+    let i = 0;
+    let anim = setInterval(() => {
+        counter.innerText = i;
+        if(i >= r.marks) clearInterval(anim);
         i++;
-    },20);
-    document.getElementById("suggestions").innerHTML = r.suggestions.map(s=><div class="suggestion-card">${s}</div>).join("");
+    }, 20);
+    document.getElementById("suggestions").innerHTML = r.suggestions.map(s => `<div class="suggestion-card">${s}</div>`).join("");
 }
 
 /* ================================

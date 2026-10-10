@@ -5,23 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>AlgoPlay — Dashboard (Desktop)</title>
 <style>
-    /* Chatbot floating — TRULY FIXED POSITION, BOTTOM LEFT */
-.chatbot-wrapper{
-  /* --- CHANGED --- */
-  position:fixed;
-  left:28px; /* Changed from 'right' to 'left' */
-  right:unset; /* Ensure 'right' is not set */
-  bottom:5px;
-  z-index:9999;
-  width:235px;
-}
-
-.chatbot{
-  /* --- CHANGED --- */
-  margin-left:0; /* Removed unnecessary margin-left */
-  background:linear-gradient(90deg,var(--primary),var(--primary-2));color:#fff;padding:14px 18px;border-radius:40px;display:flex;align-items:center;gap:12px;font-weight:900;box-shadow:0 20px 48px rgba(0,0,0,0.38);cursor:pointer;
-  transition:all 0.3s ease;animation:float 3s ease-in-out infinite;
-}
 
 /* ... (rest of the CSS remains the same) ... */
 
@@ -162,25 +145,6 @@
   .controls button:hover{transform:translateY(-4px);box-shadow:0 14px 32px rgba(0,0,0,0.18)}
   .controls button:active{transform:translateY(-2px)}
 
-  /* Chatbot floating — TRULY FIXED POSITION, BOTTOM RIGHT */
-  .chatbot-wrapper{
-    position:fixed;right:28px;bottom:28px;z-index:9999;
-  }
-
-  .chatbot{
-    margin-left:25px;
-    background:linear-gradient(90deg,var(--primary),var(--primary-2));color:#fff;padding:14px 18px;border-radius:40px;display:flex;align-items:center;gap:12px;font-weight:900;box-shadow:0 20px 48px rgba(0,0,0,0.38);cursor:pointer;
-    transition:all 0.3s ease;animation:float 3s ease-in-out infinite;
-  }
-
-  @keyframes float{
-    0%,100%{transform:translateY(0)}
-    50%{transform:translateY(-8px)}
-  }
-
-  .chatbot:hover{transform:translateY(-8px) scale(1.06);box-shadow:0 24px 56px rgba(0,0,0,0.42)}
-  .chatbot img{width:38px;height:38px;border-radius:50%;object-fit:cover}
-
   /* Responsive */
   @media (max-width:1200px){
     .wrap{grid-template-columns:420px 1fr;max-width:1100px;gap:28px}
@@ -194,8 +158,6 @@
     .avatar svg{width:58px;height:58px}
     .subject{padding:20px;gap:16px;min-height:110px}
     .subject-action{width:200px}
-    .chatbot-wrapper{right:20px;bottom:20px}
-    .chatbot{padding:12px 14px;font-size:0.95rem}
   }
 
   @media (max-width:720px){
@@ -203,7 +165,6 @@
     .subject{flex-direction:column;align-items:flex-start;min-height:unset}
     .subject-action{width:100%}
     .avatar{width:90px;height:90px}
-    .chatbot-wrapper{right:16px;bottom:16px}
   }
 </style>
 </head>
@@ -281,17 +242,6 @@
   </section>
 </div>
 
-<div class="chatbot-wrapper">
-  <div class="chatbot" id="chatbotBtn" title="Open AI Chatbot">
-    <img src="data:image/svg+xml;utf8,
-    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'>
-      <path d='M12 3C7 3 3 6.69 3 11c0 2.7 1.56 5.11 4 6.67V21l3.07-1.81C11.64 19.07 11.82 19 12 19c5 0 9-3.69 9-8s-4-8-9-8z'/>
-    </svg>" alt="Chatbot">
-    <span data-i18n="chat_with_ai">Chat with AI</span>
-  </div>
-</div>
-
-
 <script>
 
 // -------------------- LOAD PROFILE DATA --------------------
@@ -347,11 +297,11 @@ navBtn('achievementsBtn', 'achievements.html');
 
 // -------------------- PROFILE OPEN --------------------
 document.getElementById('profileHeader').addEventListener('click', () => {
-  window.location.href = 'userpro.html';
+  window.location.href = 'userprofile.html';
 });
 
 document.getElementById('avatar').addEventListener('click', () => {
-  window.location.href = 'profile.html';
+  window.location.href = 'userprofile.html';
 });
 
 
@@ -360,18 +310,9 @@ document.getElementById('avatar').addEventListener('click', () => {
 document.getElementById('logoutBtn').addEventListener('click', () => {
   if (confirm('Are you sure you want to logout?')) {
     sessionStorage.clear();
-    window.location.href = 'stutea.html';
+    window.location.href = 'Loginpage.html';
   }
 });
-
-
-
-// -------------------- CHATBOT BUTTON --------------------
-document.getElementById('chatbotBtn').addEventListener('click', () => {
-  window.location.href = 'chatbot.html';
-});
-
-
 </script>
 <script src="lang.js"></script>
 

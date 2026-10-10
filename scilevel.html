@@ -105,7 +105,10 @@
 <body>
 
 <div class="container">
-    <h2>Levels</h2>
+    <div style="margin-bottom: 20px;">
+        <a href="maindashboard.html" style="text-decoration: none; color: var(--primary); font-weight: 700; font-size: 14px;">← Back to Dashboard</a>
+    </div>
+    <h2>Science Quizzes &amp; Levels</h2>
     <div id="levels"></div>
 </div>
 
@@ -120,7 +123,7 @@
     // Loop through all levels (up to totalLevels - 1) to check for completion
     let levelUnlocked = false;
     for (let i = 1; i < totalLevels; i++) {
-        const completedFlag = sessionStorage.getItem(`level${i}_completed`);
+        const completedFlag = sessionStorage.getItem(`level${i}_completed`) || (sessionStorage.getItem("completedLevel") == i ? 'true' : null);
         
         // If the current level (i) was just completed AND the permanent unlock status is only up to i
         if (completedFlag === 'true' && unlockedUntil === i) {
@@ -134,6 +137,7 @@
         
         // Always clear the session flag after checking to prevent repeated alerts on refresh
         sessionStorage.removeItem(`level${i}_completed`);
+        sessionStorage.removeItem("completedLevel");
     }
 
     const icons = ["📘", "📗", "📙", "🎯", "🚀", "✨", "⚡", "💡"];

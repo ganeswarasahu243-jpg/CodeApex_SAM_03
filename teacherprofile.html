@@ -141,7 +141,11 @@
 
 <div class="container">
 
-    <h1>Profile</h1>
+    <div style="display:flex;justify-content:flex-start;margin-bottom:12px;">
+        <a href="teacherdash.html" style="color:#60a5fa;text-decoration:none;font-weight:600;padding:6px 14px;background:rgba(255,255,255,0.08);border-radius:8px;border:1px solid rgba(255,255,255,0.15);font-size:13px;">← Teacher Dashboard</a>
+    </div>
+
+    <h1>Teacher Profile</h1>
 
     <!-- Avatar Upload -->
     <div class="avatar-box">
@@ -165,6 +169,20 @@
 </div>
 
 <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const tName = sessionStorage.getItem("logged_in_name") || "Prof. Sharma";
+        const tEmail = sessionStorage.getItem("logged_in_email") || "teacher@school.edu";
+        const tSchool = sessionStorage.getItem("logged_in_school") || "AlgoPlay Academy";
+        const savedProf = JSON.parse(localStorage.getItem("teacherProfile") || "{}");
+
+        document.getElementById("name").value = savedProf.name || tName;
+        document.getElementById("email").value = savedProf.email || tEmail;
+        document.getElementById("school").value = savedProf.school || tSchool;
+        document.getElementById("subject").value = savedProf.subject || "Mathematics & Science";
+        document.getElementById("class").value = savedProf.class || "Class 8";
+        document.getElementById("experience").value = savedProf.experience || "Senior educator focusing on gamified STEM learning.";
+    });
+
     // Avatar Image Preview
     document.getElementById("avatarInput").addEventListener("change", function() {
         const file = this.files[0];
@@ -172,11 +190,32 @@
             document.getElementById("avatarPreview").src = URL.createObjectURL(file);
         }
     });
+
     function savebtn(){
-      location.href="teacherdash.html";
+        const nameVal = document.getElementById("name").value.trim();
+        const emailVal = document.getElementById("email").value.trim();
+        const schoolVal = document.getElementById("school").value.trim();
+        const subVal = document.getElementById("subject").value.trim();
+        const classVal = document.getElementById("class").value.trim();
+        const expVal = document.getElementById("experience").value.trim();
+
+        const profile = {
+            name: nameVal,
+            email: emailVal,
+            school: schoolVal,
+            subject: subVal,
+            class: classVal,
+            experience: expVal
+        };
+
+        localStorage.setItem("teacherProfile", JSON.stringify(profile));
+        if (nameVal) sessionStorage.setItem("logged_in_name", nameVal);
+        if (emailVal) sessionStorage.setItem("logged_in_email", emailVal);
+        if (schoolVal) sessionStorage.setItem("logged_in_school", schoolVal);
+
+        alert("Profile updated successfully! 🎉");
+        location.href = "teacherdash.html";
     }
-        
-    
 </script>
 
 </body>

@@ -192,8 +192,19 @@ document.getElementById("signupBtn").addEventListener("click", async () => {
         window.location.href = "teacherlogin.html";
 
     } catch (err) {
-        alert("Server error. Check backend.");
-        console.error(err);
+        console.warn("Backend offline, saving teacher locally...", err);
+        const teachers = JSON.parse(localStorage.getItem("algoplay_teachers") || "[]");
+        teachers.push({
+            id: Date.now(),
+            name,
+            email,
+            schoolname,
+            password
+        });
+        localStorage.setItem("algoplay_teachers", JSON.stringify(teachers));
+
+        alert("Teacher signup successful! 🎉");
+        window.location.href = "teacherlogin.html";
     } finally {
         btn.disabled = false;
         btn.textContent = "Create Account";

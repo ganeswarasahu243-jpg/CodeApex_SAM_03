@@ -33,26 +33,53 @@ h2 {
     text-shadow: 0 0 12px #3b82f6;
 }
 
+#progress {
+    font-size: 15px;
+    font-weight: 700;
+    color: #94a3b8;
+    margin-bottom: 15px;
+}
+
+#quiz {
+    max-width: 650px;
+    margin: 20px auto;
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 20px;
+    padding: 30px 24px;
+    box-shadow: 0 15px 45px rgba(0,0,0,0.5);
+    backdrop-filter: blur(10px);
+}
+
+#quiz h3 {
+    font-size: 22px;
+    margin-bottom: 25px;
+    line-height: 1.4;
+    color: #f8fafc;
+}
+
 /* QUIZ BUTTONS */
 button {
     display:block;
     margin:12px auto;
-    padding:12px 25px;
-    background:#1e293b;
+    padding:14px 20px;
+    background:rgba(255,255,255,0.06);
     color:white;
-    border:none;
-    border-radius:8px;
-    width:55%;
-    font-size:18px;
+    border:1px solid rgba(255,255,255,0.15);
+    border-radius:12px;
+    width:90%;
+    font-size:17px;
+    font-weight:600;
+    text-align:left;
     cursor:pointer;
     transition:0.25s;
 }
-button:hover { background:#334155; transform:scale(1.05); }
+button:hover { background:rgba(59, 130, 246, 0.2); border-color:#3b82f6; transform:translateY(-2px); }
 
-.correct { background:#16a34a !important; }
-.wrong   { background:#dc2626 !important; }
+.correct { background:#16a34a !important; border-color:#22c55e !important; }
+.wrong   { background:#dc2626 !important; border-color:#ef4444 !important; }
 
-#next { background:#3b82f6; width:40%; }
+#next { background:linear-gradient(135deg, #3b82f6, #1d4ed8); width:50%; text-align:center; font-weight:700; margin-top:20px; }
 
 /* FLOATING MUTE BUTTON */
 #muteBtn {
@@ -147,7 +174,7 @@ function popConfetti() {
             r: Math.random() * 6 + 2,
             dx: (Math.random() - 0.5) * 4,
             dy: Math.random() * 4 + 1,
-            c: hsl(${Math.random()*360},100%,60%)
+            c: `hsl(${Math.random()*360},100%,60%)`
         });
     }
 }
@@ -235,19 +262,30 @@ let index = 0;
 let scoreVal = 0;
 let xpVal = 0;
 
+/* DOM Elements */
+const muteBtn = document.getElementById("muteBtn");
+const progress = document.getElementById("progress");
+const quiz = document.getElementById("quiz");
+const correctSound = document.getElementById("correctSound");
+const wrongSound = document.getElementById("wrongSound");
+
 /* MUSIC */
 const bgMusic = document.getElementById("bgMusic");
-bgMusic.volume = 0.25;
-bgMusic.play().catch(()=>{});
+if (bgMusic) {
+    bgMusic.volume = 0.25;
+    bgMusic.play().catch(()=>{});
+}
 let muted = false;
 
-muteBtn.onclick = () => {
-    muted = !muted;
-    bgMusic.muted = muted;
-    correctSound.muted = muted;
-    wrongSound.muted = muted;
-    muteBtn.innerHTML = muted ? "🔇" : "🔊";
-};
+if (muteBtn) {
+    muteBtn.onclick = () => {
+        muted = !muted;
+        if (bgMusic) bgMusic.muted = muted;
+        if (correctSound) correctSound.muted = muted;
+        if (wrongSound) wrongSound.muted = muted;
+        muteBtn.innerHTML = muted ? "🔇" : "🔊";
+    };
+}
 
 /* TIMER FIXED */
 let timeLeft = 12;
@@ -272,13 +310,13 @@ function startTimer() {
 
 /* LOAD QUESTION */
 function loadQ() {
-    progress.innerHTML = Question ${index + 1} of ${questions.length};
+    progress.innerHTML = `Question ${index + 1} of ${questions.length}`;
 
     let q = questions[index];
     quiz.innerHTML =
-        <h3>${q.q}</h3> +
+        `<h3>${q.q}</h3>` +
         q.o.map((x, i) =>
-            <button class='option' onclick='choose(${i},this)'>${x}</button>
+            `<button class='option' onclick='choose(${i},this)'>${x}</button>`
         ).join("");
 
     startTimer();
